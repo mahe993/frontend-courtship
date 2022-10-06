@@ -1,9 +1,10 @@
 import React from "react";
-import { Avatar, Box, useTheme, Link } from "@mui/material";
+import { Avatar, Box, useTheme, Link, Badge } from "@mui/material";
 import { navItems } from "../constants";
 import { useNavigate } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import Branding from "./Branding";
 
 const TabletNavBar = () => {
   const theme = useTheme();
@@ -12,17 +13,18 @@ const TabletNavBar = () => {
   return (
     <Box
       maxWidth={"100vw"}
-      width="100vw"
+      width="100%"
       height={"10vh"}
       bgcolor={theme.palette.success.dark}
       display="flex"
       fontSize={10}
+      justifyContent="space-between"
     >
       <Box display="flex" gap={1} maxWidth="33%" height="inherit">
         <Box display="flex" alignItems="center" ml={1}>
           <Avatar
             src="/broken-image.jpg"
-            sx={{ width: 35, height: 35 }}
+            sx={{ width: 30, height: 30 }}
             alt="username"
           />
         </Box>
@@ -70,6 +72,9 @@ const TabletNavBar = () => {
             {item.name}
           </Link>
         ))}
+      </Box>
+      <Box display="flex" alignItems="center" mr={1}>
+        <Branding />
       </Box>
     </Box>
   );
