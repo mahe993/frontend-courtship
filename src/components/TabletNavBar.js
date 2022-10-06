@@ -13,15 +13,16 @@ const TabletNavBar = () => {
     <Box
       maxWidth={"100vw"}
       width="100vw"
-      height={"15vh"}
-      bgcolor={theme.palette.success.main}
+      height={"10vh"}
+      bgcolor={theme.palette.success.dark}
       display="flex"
+      fontSize={10}
     >
       <Box display="flex" gap={1} maxWidth="33%" height="inherit">
         <Box display="flex" alignItems="center" ml={1}>
           <Avatar
             src="/broken-image.jpg"
-            sx={{ width: 50, height: 50 }}
+            sx={{ width: 35, height: 35 }}
             alt="username"
           />
         </Box>
@@ -29,9 +30,10 @@ const TabletNavBar = () => {
           {"!userSignedIn" ? (
             <Link
               component="button"
-              variant="overline"
+              variant="subtitle2"
               color="inherit"
               onClick={() => navigate("/login")}
+              fontSize="inherit"
             >
               Login/Signup
             </Link>
@@ -60,6 +62,7 @@ const TabletNavBar = () => {
             color="inherit"
             underline="hover"
             onClick={() => navigate(item.path)}
+            fontSize="inherit"
             css={css`
               min-width: 65px;
             `}

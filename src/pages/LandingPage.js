@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import NavBar from "../components/NavBar";
 
 const LandingPage = () => {
-  return <NavBar />;
+  return <Box>enter motivational speech</Box>;
 };
 
 export default LandingPage;
