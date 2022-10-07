@@ -4,11 +4,11 @@ import React from "react";
 const Manifesto = () => {
   return (
     <>
-      <h1>Welcome to Courtship</h1>
+      <h2>Welcome to Courtship™</h2>
       <br />
       <Box width="90%" m="auto">
         <Box component="p" fontWeight="bold">
-          This is a space for tennis lovers to find courts to play!
+          Tennis lovers' space!
         </Box>
         <hr />
         <Box component="p" textAlign="justify" fontStyle="italic">

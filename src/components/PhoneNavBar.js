@@ -19,7 +19,7 @@ const PhoneNavBar = () => {
       display="flex"
       justifyContent="space-between"
       fontSize={10}
-      minWidth="320px"
+      minWidth="360px"
     >
       <Box display="flex" gap={1} maxWidth="33%" height="inherit">
         <Box display="flex" alignItems="center" ml={1}>
@@ -48,12 +48,9 @@ const PhoneNavBar = () => {
       <Box
         display="flex"
         alignItems="center"
-        position="absolute"
-        left="50%"
+        position="relative"
+        left="-20px"
         height="inherit"
-        css={css`
-          transform: translate(-50%);
-        `}
       >
         <Branding />
       </Box>
