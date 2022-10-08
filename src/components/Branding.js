@@ -16,7 +16,7 @@ const Branding = () => {
       <Box
         bgcolor={"purple"}
         borderRadius="25px"
-        width="50px"
+        width="55px"
         textAlign="center"
         height="15px"
         onClick={() => navigate("/")}

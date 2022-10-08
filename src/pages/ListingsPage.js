@@ -6,14 +6,28 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { css } from "@emotion/react";
 import Listing from "../components/Listing";
 import NewListingForm from "../forms/NewListingForm";
+import axios from "axios";
+import { BACKEND_URL } from "../constants";
 
 const ListingsPage = () => {
   const [userListings, setUserListings] = useState(["a", "b", "c", "d"]);
   const [openForm, setOpenForm] = useState(false);
 
   useEffect(() => {
-    console.log("get all listings where userId = * and set to state");
+    // getUserListings();
   }, []);
+
+  // implement Auth0 to get userId and clear initial userListings state
+  // const getUserListings = async () => {
+  //   try {
+  //     const res = await axios({
+  //       url: `${BACKEND_URL}/listings/${userId}`,
+  //     });
+  //     setUserListings(res.data);
+  //   } catch (err) {
+  //     throw new Error(err);
+  //   }
+  // };
 
   return (
     <>

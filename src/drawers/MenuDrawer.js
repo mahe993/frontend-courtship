@@ -3,7 +3,7 @@ import { Box, Drawer, ListItem, ListItemText } from "@mui/material";
 import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
-import { navItems } from "../constants";
+import { NAV_ITEMS } from "../constants";
 
 const MenuDrawer = () => {
   const [openMenuDrawer, setOpenMenuDrawer] = useState(false);
@@ -31,7 +31,7 @@ const MenuDrawer = () => {
           justifyContent={"center"}
           mt={1}
         ></Box>
-        {navItems.map((item) => (
+        {NAV_ITEMS.map((item) => (
           <ListItem
             key={item.name}
             button

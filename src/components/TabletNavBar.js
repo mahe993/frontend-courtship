@@ -1,6 +1,6 @@
 import React from "react";
-import { Avatar, Box, useTheme, Link, Badge } from "@mui/material";
-import { navItems } from "../constants";
+import { Avatar, Box, useTheme, Link } from "@mui/material";
+import { NAV_ITEMS } from "../constants";
 import { useNavigate } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
@@ -56,7 +56,7 @@ const TabletNavBar = () => {
           transform: translate(-50%);
         `}
       >
-        {navItems.map((item) => (
+        {NAV_ITEMS.map((item) => (
           <Link
             component="button"
             key={item.name}

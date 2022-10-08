@@ -1,6 +1,17 @@
 import { createTheme } from "@mui/material";
 
-export const breakPoint = createTheme({
+/* eslint-disable default-case */
+const backendURL = (devEnv) => {
+  switch (devEnv) {
+    case "development":
+      console.log(devEnv);
+      return process.env.REACT_APP_DEVELOPMENT_BACKEND_URL;
+  }
+};
+
+export const BACKEND_URL = backendURL(process.env.NODE_ENV);
+
+export const BREAKPOINT = createTheme({
   breakpoints: {
     values: {
       mobile: 0,
@@ -11,7 +22,7 @@ export const breakPoint = createTheme({
   },
 });
 
-export const navItems = [
+export const NAV_ITEMS = [
   { name: "Courtyard", path: "/courtyard" },
   { name: "Listings", path: "/listings" },
   { name: "Bookings", path: "/bookings" },
@@ -19,10 +30,10 @@ export const navItems = [
   { name: "Account", path: "/account" },
 ];
 
-const fileTypes = ["image/jpeg", "image/png", "image/jpg"];
+const FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
 export const validateFileType = (file) => {
-  return fileTypes.includes(file.type);
+  return FILE_TYPES.includes(file.type);
 };
 
 export const returnFileSize = (number) => {

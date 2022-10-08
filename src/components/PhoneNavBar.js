@@ -3,8 +3,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import MenuDrawer from "../drawers/MenuDrawer";
 import Branding from "./Branding";
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 
 const PhoneNavBar = () => {
   const theme = useTheme();

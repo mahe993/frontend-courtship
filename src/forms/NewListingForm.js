@@ -11,6 +11,7 @@ import _ from "lodash";
 const NewListingForm = () => {
   const [displayPictureFiles, setDisplayPictureFiles] = useState([]);
 
+  // react-hook-form methods
   const {
     register,
     handleSubmit,
@@ -18,15 +19,20 @@ const NewListingForm = () => {
     watch,
     setError,
     clearErrors,
-    resetField,
     formState: { errors, isValid },
-  } = useForm({ delayError: 800, mode: "onChange" });
+  } = useForm({ delayError: 500, mode: "onChange" });
 
-  const onSubmit = (data) => console.log(getValues("courtPictures"));
+  // handleSubmit callback fns
+  const onSubmit = (data) => {
+    //post to DB
+    console.log(data);
+  };
+  const onError = (err) => {
+    throw new Error(err);
+  };
 
-  const onError = (err) => console.log(err);
-
-  useEffect(() => {
+  // show picture preview of files to be uploaded and error validate max 5 pictures
+  const fileUploadPreview = () => {
     clearErrors("courtPictures");
     const pictureFiles = watch("courtPictures");
     const fileArr = [];
@@ -44,11 +50,7 @@ const NewListingForm = () => {
     }
     for (const file of pictureFiles) {
       if (validateFileType(file)) {
-        fileArr.push({
-          name: file.name,
-          size: returnFileSize(file.size),
-          path: URL.createObjectURL(file),
-        });
+        fileArr.push(file);
       } else {
         return setError("courtPictures", {
           type: "custom",
@@ -57,6 +59,11 @@ const NewListingForm = () => {
       }
     }
     setDisplayPictureFiles([...displayPictureFiles, ...fileArr]);
+  };
+
+  useEffect(() => {
+    fileUploadPreview();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch("courtPictures")]);
 
   return (
@@ -81,6 +88,7 @@ const NewListingForm = () => {
             Name:
           </label>
           <input
+            autoComplete="off"
             id="courtName"
             type="text"
             placeholder="Court Name"
@@ -127,6 +135,7 @@ const NewListingForm = () => {
             Address:
           </label>
           <input
+            autoComplete="off"
             id="address"
             type="text"
             placeholder="Teban Gardens BLK 150 #01-123 S123456"
@@ -204,6 +213,59 @@ const NewListingForm = () => {
             {errors.description.message}
           </Box>
         )}
+        <Box
+          display="flex"
+          gap={1}
+          minWidth="40vw"
+          width="60vw"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <label
+            htmlFor="price"
+            css={css`
+              min-width: 20%;
+              text-align: end;
+              font-size: 10px;
+            `}
+          >
+            Price ($):
+          </label>
+          <input
+            autoComplete="off"
+            id="price"
+            type="text"
+            placeholder="$ per hour"
+            {...register("price", {
+              required: "This field is required!",
+              pattern: {
+                value: /^[0-9]+$/,
+                message: "Please only enter numbers!",
+              },
+            })}
+            css={css`
+              font-size: 10px;
+              min-width: 75%;
+              padding: 3px;
+              ::placeholder {
+                font-size: 10px;
+                font-style: italic;
+              }
+            `}
+          />
+        </Box>
+        {errors.price && (
+          <Box
+            fontSize={7}
+            color="red"
+            mt={-1}
+            width="60vw"
+            pl="14.5vw"
+            textAlign="start"
+          >
+            {errors.price.message}
+          </Box>
+        )}
         <Box>
           <label
             htmlFor="courtPictures"
@@ -227,7 +289,6 @@ const NewListingForm = () => {
             />
             Add tennis court pictures <EditIcon fontSize="inherit" /> (max. 5)
           </label>
-          {/* validate file count <=5 on change */}
         </Box>
         {errors.courtPictures && (
           <Box
@@ -241,47 +302,49 @@ const NewListingForm = () => {
           </Box>
         )}
         {displayPictureFiles[0] &&
-          displayPictureFiles.map((file, index) => (
-            <Box
-              key={index}
-              width="400px"
-              alignItems="center"
-              justifyContent="start"
-              display="flex"
-              gap={2}
-            >
-              <Box width="90px" display="flex" alignItems="center">
-                <img
-                  src={file.path}
-                  alt={file.name}
-                  width="90px"
-                  height="60px"
-                />
-              </Box>
+          displayPictureFiles.map((file, index) => {
+            const path = URL.createObjectURL(file);
+            const size = returnFileSize(file.size);
+            return (
               <Box
+                key={index}
+                width="400px"
+                alignItems="center"
+                justifyContent="start"
                 display="flex"
-                flexDirection="column"
-                minWidth="50%"
-                fontSize={8}
+                gap={2}
               >
-                <Box>
-                  Name: {file.name.slice(0, 50)}
-                  {file.name.slice(50) && "..."}
+                <Box width="90px" display="flex" alignItems="center">
+                  <img src={path} alt={file.name} width="90px" height="60px" />
                 </Box>
-                <Box>Size: {file.size}</Box>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  minWidth="50%"
+                  fontSize={8}
+                >
+                  <Box>
+                    Name: {file.name.slice(0, 50)}
+                    {file.name.slice(50) && "..."}
+                  </Box>
+                  <Box>Size: {size}</Box>
+                </Box>
+                <Box
+                  ml="auto"
+                  onClick={() => {
+                    displayPictureFiles.splice(index, 1);
+                    clearErrors("courtPictures");
+                    setDisplayPictureFiles([...displayPictureFiles]);
+                  }}
+                  css={css`
+                    cursor: pointer;
+                  `}
+                >
+                  <CloseIcon />
+                </Box>
               </Box>
-              <Box
-                ml="auto"
-                onClick={() => {
-                  displayPictureFiles.splice(index, 1);
-                  clearErrors("courtPictures");
-                  setDisplayPictureFiles([...displayPictureFiles]);
-                }}
-              >
-                <CloseIcon />
-              </Box>
-            </Box>
-          ))}
+            );
+          })}
         <input type="submit" disabled={!isValid} />
       </Box>
     </form>
