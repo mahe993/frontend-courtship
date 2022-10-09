@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { css } from "@emotion/react";
 import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { returnFileSize, validateFileType } from "../constants";
+import { BACKEND_URL, returnFileSize, validateFileType } from "../constants";
 import CloseIcon from "@mui/icons-material/Close";
-import _ from "lodash";
+import { addDays } from "date-fns";
+import axios from "axios";
 
 const NewListingForm = () => {
   const [displayPictureFiles, setDisplayPictureFiles] = useState([]);
@@ -19,13 +20,34 @@ const NewListingForm = () => {
     watch,
     setError,
     clearErrors,
-    formState: { errors, isValid },
+    reset,
+    formState: { errors, isValid, isSubmitSuccessful },
   } = useForm({ delayError: 500, mode: "onChange" });
+
+  // post court listing
+  const postCourtListing = async () => {
+    try {
+      const res = await axios({
+        method: "post",
+        url: `${BACKEND_URL}/listings`,
+        data: {
+          courtName: getValues("courtName"),
+          address: getValues("address"),
+          description: getValues("description"),
+          price: Number(getValues("price")),
+          expiry: addDays(new Date(), 14),
+        },
+      });
+      console.log(res.data);
+    } catch (err) {
+      return console.log(err);
+    }
+  };
 
   // handleSubmit callback fns
   const onSubmit = (data) => {
     //post to DB
-    console.log(data);
+    postCourtListing();
   };
   const onError = (err) => {
     throw new Error(err);
@@ -65,6 +87,12 @@ const NewListingForm = () => {
     fileUploadPreview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch("courtPictures")]);
+
+  // reset form after successful submit
+  useEffect(() => {
+    reset();
+    setDisplayPictureFiles([]);
+  }, [isSubmitSuccessful]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
