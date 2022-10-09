@@ -27,6 +27,7 @@ const NewListingForm = () => {
   // post court listing
   const postCourtListing = async () => {
     try {
+      // create new court row
       const res = await axios({
         method: "post",
         url: `${BACKEND_URL}/listings`,
@@ -38,9 +39,27 @@ const NewListingForm = () => {
           expiry: addDays(new Date(), 14),
         },
       });
-      console.log(res.data);
+      // check if pictures avail for upload, if so update court row with pic url
+      if (displayPictureFiles[0]) {
+        const formData = new FormData();
+        displayPictureFiles.forEach((pic) =>
+          formData.append("pictures[]", pic)
+        );
+        console.log(formData);
+        try {
+          const picRes = await axios({
+            method: "post",
+            url: `${BACKEND_URL}/firebase/${res.data.id}`,
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          console.log(picRes);
+        } catch (err) {
+          throw new Error(err);
+        }
+      }
     } catch (err) {
-      return console.log(err);
+      throw new Error(err);
     }
   };
 
