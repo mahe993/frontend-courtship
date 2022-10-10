@@ -128,7 +128,8 @@ const NewListingForm = () => {
           <label
             htmlFor="courtName"
             css={css`
-              min-width: 20%;
+              width: 10%;
+              min-width: 60px;
               text-align: end;
               font-size: 10px;
             `}
@@ -175,7 +176,8 @@ const NewListingForm = () => {
           <label
             htmlFor="address"
             css={css`
-              min-width: 20%;
+              width: 10%;
+              min-width: 60px;
               text-align: end;
               font-size: 10px;
             `}
@@ -222,7 +224,8 @@ const NewListingForm = () => {
           <label
             htmlFor="description"
             css={css`
-              min-width: 20%;
+              width: 10%;
+              min-width: 60px;
               text-align: end;
               font-size: 10px;
             `}
@@ -272,7 +275,8 @@ const NewListingForm = () => {
           <label
             htmlFor="price"
             css={css`
-              min-width: 20%;
+              width: 10%;
+              min-width: 60px;
               text-align: end;
               font-size: 10px;
             `}

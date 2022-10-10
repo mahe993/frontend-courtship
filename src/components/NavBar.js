@@ -5,6 +5,8 @@ import TabletNavBar from "./TabletNavBar";
 import PhoneNavBar from "./PhoneNavBar";
 
 const NavBar = () => {
+  // listen to usercontext, when authkey is received, match to users table to get username/email/avatarurl
+
   const phoneMediaQuery = useMediaQuery(BREAKPOINT.breakpoints.down("tablet"));
 
   return phoneMediaQuery ? (
