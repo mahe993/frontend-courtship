@@ -10,20 +10,20 @@ import axios from "axios";
 import { BACKEND_URL } from "../constants";
 
 const ListingsPage = () => {
-  const [userListings, setUserListings] = useState(["a", "b", "c", "d"]);
+  const [userCourts, setUserCourts] = useState(["a", "b", "c", "d"]);
   const [openForm, setOpenForm] = useState(false);
 
   useEffect(() => {
-    // getUserListings();
+    // getUserCourts();
   }, []);
 
-  // implement Auth0 to get userId and clear initial userListings state
-  // const getUserListings = async () => {
+  // implement Auth0 to get userId and clear initial userCourts state
+  // const getUserCourts = async () => {
   //   try {
   //     const res = await axios({
   //       url: `${BACKEND_URL}/listings/${userId}`,
   //     });
-  //     setUserListings(res.data);
+  //     setUserCourts(res.data);
   //   } catch (err) {
   //     throw new Error(err);
   //   }
@@ -57,7 +57,7 @@ const ListingsPage = () => {
         </Box>
       )}
       <Box mt={2}>
-        <Listing listings={userListings} />
+        <Listing listings={userCourts} />
       </Box>
     </>
   );
