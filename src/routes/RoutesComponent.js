@@ -7,6 +7,7 @@ import CourtyardPage from "../pages/CourtyardPage";
 import CourtPage from "../pages/CourtPage";
 import BookingsPage from "../pages/BookingsPage";
 import AccountPage from "../pages/AccountPage";
+import TestPage from "../pages/TestPage";
 
 const RoutesComponent = () => {
   return (
@@ -18,6 +19,8 @@ const RoutesComponent = () => {
       <Route path="/bookings" element=<BookingsPage /> />
       <Route path="/about" element=<AboutUsPage /> />
       <Route path="/account" element=<AccountPage /> />
+      <Route path="/test" element=<TestPage /> />
+
       <Route
         path="*"
         element={
