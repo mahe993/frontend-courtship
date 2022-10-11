@@ -51,7 +51,7 @@ const WalletTopUpForm = () => {
             css={css`
               display: flex;
               align-items: center;
-              width: 70px;
+              width: 10%;
               min-width: 60px;
               justify-content: end;
               font-size: 10px;
@@ -64,8 +64,8 @@ const WalletTopUpForm = () => {
             css={css`
               display: flex;
               align-items: center;
-              width: 143px;
-              min-width: 60px;
+              width: 20%;
+              min-width: 143px;
               justify-content: center;
               font-size: 10px;
               height: 23.5px;
@@ -88,7 +88,7 @@ const WalletTopUpForm = () => {
             css={css`
               display: flex;
               align-items: center;
-              width: 70px;
+              width: 10%;
               min-width: 60px;
               justify-content: end;
               font-size: 10px;
