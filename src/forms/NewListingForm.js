@@ -30,13 +30,14 @@ const NewListingForm = () => {
       // create new court row
       const res = await axios({
         method: "post",
-        url: `${BACKEND_URL}/listings`,
+        url: `${BACKEND_URL}/courts`,
         data: {
           courtName: getValues("courtName"),
           address: getValues("address"),
           description: getValues("description"),
           price: Number(getValues("price")),
-          expiry: addDays(new Date(), 14),
+          //userID get from auth0
+          // userId: `${??}`,
         },
       });
       // check if pictures avail for upload, if so update court row with pic url
@@ -49,7 +50,7 @@ const NewListingForm = () => {
         try {
           const picRes = await axios({
             method: "post",
-            url: `${BACKEND_URL}/firebase/${res.data.id}`,
+            url: `${BACKEND_URL}/firebase/${res.data.userId}/${res.data.id}`,
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
           });

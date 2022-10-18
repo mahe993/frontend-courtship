@@ -14,20 +14,21 @@ const ListingsPage = () => {
   const [openForm, setOpenForm] = useState(false);
 
   useEffect(() => {
-    // getUserCourts();
+    getUserCourts();
   }, []);
 
   // implement Auth0 to get userId and clear initial userCourts state
-  // const getUserCourts = async () => {
-  //   try {
-  //     const res = await axios({
-  //       url: `${BACKEND_URL}/listings/${userId}`,
-  //     });
-  //     setUserCourts(res.data);
-  //   } catch (err) {
-  //     throw new Error(err);
-  //   }
-  // };
+  const getUserCourts = async () => {
+    try {
+      const res = await axios({
+        url: `${BACKEND_URL}/courts/${1}`,
+      });
+      setUserCourts(res.data);
+      console.log(res.data);
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
 
   return (
     <>

@@ -1,16 +1,32 @@
 import React, { useEffect, useState } from "react";
 import Listing from "../components/Listing.js";
 import axios from "axios";
+import { BACKEND_URL } from "../constants.js";
+import { Box } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 const CourtyardPage = () => {
   const [allCourts, setAllCourts] = useState();
+  const { courtId } = useParams();
 
   useEffect(() => {
-    //get all courts. on backend set findbypk(where: expiry: [op.gte]today)
-    //setAllCourts() to that value
+    console.log(courtId);
+    // getAllCourts();
   }, []);
 
-  return <Listing listings={allCourts} />;
+  const getAllCourts = async () => {
+    const courts = await axios.get(
+      `${BACKEND_URL}/courts/courtyard/${courtId}`
+    );
+    console.log(courts.data);
+    setAllCourts(courts.data);
+  };
+
+  return (
+    <Box mt={1}>
+      <Listing listings={allCourts} />
+    </Box>
+  );
 };
 
 export default CourtyardPage;
