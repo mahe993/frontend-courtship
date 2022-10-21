@@ -31,6 +31,18 @@ export const NAV_ITEMS = [
   { name: "Account", path: "/account" },
 ];
 
+export const TIME_SLOTS_ONE = [
+  { label: "10am - 12pm", value: 10 },
+  { label: "12pm - 2pm", value: 12 },
+  { label: "2pm - 4pm", value: 14 },
+];
+
+export const TIME_SLOTS_TWO = [
+  { label: "4pm - 6pm", value: 16 },
+  { label: "6pm - 8pm", value: 18 },
+  { label: "8pm - 10pm", value: 20 },
+];
+
 const FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
 export const validateFileType = (file) => {

@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { BACKEND_URL } from "../constants";
+import { BACKEND_URL, TIME_SLOTS_ONE, TIME_SLOTS_TWO } from "../constants";
 import { Box, Button } from "@mui/material";
 import PictureCarousel from "../components/PictureCarousel";
 import { useForm } from "react-hook-form";
-import { addDays, formatRelative, getHours, lightFormat } from "date-fns";
+import { addDays, getHours, lightFormat } from "date-fns";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import TimeSlots from "../components/TimeSlots";
 
 const CourtPage = () => {
   const [court, setCourt] = useState();
-  const [today, setToday] = useState(lightFormat(new Date(), "yyyy-MM-dd"));
+  const [today, setToday] = useState(new Date());
+  const [minDate, setMinDate] = useState(lightFormat(new Date(), "yyyy-MM-dd"));
   const [maxDate, setMaxDate] = useState(
-    lightFormat(addDays(new Date(today), 14), "yyyy-MM-dd")
+    lightFormat(addDays(new Date(minDate), 14), "yyyy-MM-dd")
   );
   const [stringDate, setStringDate] = useState();
+  const [timeslot, setTimeslot] = useState();
 
   const { courtId } = useParams();
   const navigate = useNavigate();
@@ -33,31 +36,10 @@ const CourtPage = () => {
     mode: "onChange",
   });
 
+  // get court details on mount
   useEffect(() => {
     getCourt();
   }, []);
-
-  // when user selects booking date. recheck min max on change
-  useEffect(() => {
-    if (getHours(new Date()) > 19) {
-      console.log("here");
-      return setToday(lightFormat(addDays(new Date(), 1), "yyyy-MM-dd"));
-    }
-    setToday(lightFormat(new Date(), "yyyy-MM-dd"));
-    setStringDate(new Date(getValues("bookingDate")).toString());
-  }, [watch("bookingDate")]);
-
-  // when min date changes, max date changes
-  useEffect(() => {
-    setMaxDate(lightFormat(addDays(new Date(today), 14), "yyyy-MM-dd"));
-  }, [today]);
-
-  // when user selects booking date. show the date in string format
-  useEffect(() => {
-    if (getValues("bookingDate")) {
-      setStringDate(new Date(getValues("bookingDate")).toString().slice(0, 16));
-    }
-  }, [watch("bookingDate")]);
 
   const getCourt = async () => {
     try {
@@ -69,6 +51,33 @@ const CourtPage = () => {
       throw new Error(err);
     }
   };
+
+  // internal clock on mount
+  useEffect(() => {
+    const clock = setInterval(() => setToday(new Date()), 1000);
+    return () => clearInterval(clock);
+  }, []);
+
+  // recheck date/timeslot validity every second
+  useEffect(() => {
+    if (getHours(today) > 19) {
+      console.log("here");
+      return setMinDate(lightFormat(addDays(today, 1), "yyyy-MM-dd"));
+    }
+    setMinDate(lightFormat(today, "yyyy-MM-dd"));
+  }, [today]);
+
+  // when min date changes, max date changes
+  useEffect(() => {
+    setMaxDate(lightFormat(addDays(new Date(minDate), 14), "yyyy-MM-dd"));
+  }, [minDate]);
+
+  // when user selects booking date. show the date in string format
+  useEffect(() => {
+    if (getValues("bookingDate")) {
+      setStringDate(new Date(getValues("bookingDate")).toString().slice(0, 16));
+    }
+  }, [watch("bookingDate")]);
 
   return (
     court && (
@@ -132,7 +141,7 @@ const CourtPage = () => {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          gap={3}
+          gap={1.5}
           className="right-box"
         >
           <Box
@@ -163,14 +172,42 @@ const CourtPage = () => {
               {...register("bookingDate", {
                 required: "This field is required",
               })}
-              min={today}
+              min={minDate}
               max={maxDate}
             />
             <Box>{stringDate}</Box>
           </Box>
-          <Box maxWidth="100%">{`timeslots`}</Box>
+          <Box
+            maxWidth="100%"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            borderRadius="25px"
+            bgcolor="rgba(0, 0, 0, 0.5)"
+            p={2}
+            fontSize={12}
+            gap={0.5}
+          >
+            <Box>Select Timeslot</Box>
+            <TimeSlots
+              today={today}
+              setTimeslot={setTimeslot}
+              timeslot={timeslot}
+              bookingDate={getValues("bookingDate")}
+            />
+          </Box>
           <Box>
-            <Button variant="contained" color="success">
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              disabled={!getValues("bookingDate") || !timeslot}
+              css={css`
+                :disabled {
+                  color: darkgrey;
+                }
+              `}
+            >
               BOOK
             </Button>
           </Box>
