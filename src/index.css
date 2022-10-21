@@ -20,6 +20,10 @@ body {
   min-height: 100vh;
 }
 
+img {
+  object-fit: scale-down;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

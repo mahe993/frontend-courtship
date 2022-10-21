@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { BACKEND_URL, returnFileSize, validateFileType } from "../constants";
 import CloseIcon from "@mui/icons-material/Close";
-import { addDays } from "date-fns";
 import axios from "axios";
 
-const NewListingForm = () => {
+const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
   const [displayPictureFiles, setDisplayPictureFiles] = useState([]);
 
   // react-hook-form methods
@@ -37,28 +36,28 @@ const NewListingForm = () => {
           description: getValues("description"),
           price: Number(getValues("price")),
           //userID get from auth0
-          // userId: `${??}`,
+          userId: `${2}`,
         },
       });
       // check if pictures avail for upload, if so update court row with pic url
       if (displayPictureFiles[0]) {
         const formData = new FormData();
-        displayPictureFiles.forEach((pic) =>
-          formData.append("pictures[]", pic)
-        );
-        console.log(formData);
+        displayPictureFiles.forEach((pic) => formData.append("pictures", pic));
         try {
           const picRes = await axios({
             method: "post",
-            url: `${BACKEND_URL}/firebase/${res.data.userId}/${res.data.id}`,
+            url: `${BACKEND_URL}/firebase/courtpics/${res.data.id}`,
             data: formData,
-            headers: { "Content-Type": "multipart/form-data" },
           });
           console.log(picRes);
         } catch (err) {
           throw new Error(err);
         }
       }
+      // close listing form
+      setOpenForm(false);
+      // open snackbar
+      setSnackBarOpen(true);
     } catch (err) {
       throw new Error(err);
     }
@@ -142,7 +141,9 @@ const NewListingForm = () => {
             id="courtName"
             type="text"
             placeholder="Court Name"
-            {...register("courtName", { required: "This field is required!" })}
+            {...register("courtName", {
+              required: "This field is required!",
+            })}
             css={css`
               padding: 3px;
               font-size: 10px;
@@ -293,7 +294,11 @@ const NewListingForm = () => {
               required: "This field is required!",
               pattern: {
                 value: /^[0-9]+$/,
-                message: "Please only enter numbers!",
+                message: "Please only enter round numbers!",
+              },
+              max: {
+                value: 999,
+                message: "Highest possible charge is $999/hr",
               },
             })}
             css={css`
@@ -308,14 +313,7 @@ const NewListingForm = () => {
           />
         </Box>
         {errors.price && (
-          <Box
-            fontSize={7}
-            color="red"
-            mt={-1}
-            width="60vw"
-            pl="14.5vw"
-            textAlign="start"
-          >
+          <Box fontSize={7} color="red" mt={-1} width="60vw" textAlign="center">
             {errors.price.message}
           </Box>
         )}

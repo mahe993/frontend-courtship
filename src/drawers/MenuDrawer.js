@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import { NAV_ITEMS } from "../constants";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 
 const MenuDrawer = () => {
   const [openMenuDrawer, setOpenMenuDrawer] = useState(false);
@@ -16,6 +18,9 @@ const MenuDrawer = () => {
         onClick={() => {
           setOpenMenuDrawer(true);
         }}
+        css={css`
+          cursor: pointer;
+        `}
       />
       <Drawer
         variant="temporary"
