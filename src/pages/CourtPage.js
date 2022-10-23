@@ -20,7 +20,7 @@ const CourtPage = () => {
 
   const { courtId } = useParams();
   const navigate = useNavigate();
-  const { register, getValues, watch, reset } = useForm({
+  const { register, getValues, watch, resetField } = useForm({
     delayError: 150,
     mode: "onChange",
   });
@@ -115,10 +115,10 @@ const CourtPage = () => {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          gap={1.5}
+          gap={2}
           className="right-box"
         >
-          <Box fontStyle="italic" whiteSpace={"pre-line"} p={1} fontSize={12}>
+          <Box fontStyle="italic" whiteSpace={"pre-line"} p={1.5} fontSize={12}>
             {court.description}
           </Box>
           <Box
@@ -127,7 +127,6 @@ const CourtPage = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            p={2}
             fontSize={12}
           >
             <DateSelector
@@ -136,6 +135,7 @@ const CourtPage = () => {
               })}
               watchBookingDate={watch("bookingDate")}
               currentHour={currentHour}
+              reset={() => resetField("bookingDate")}
             />
           </Box>
           <Box
@@ -143,7 +143,6 @@ const CourtPage = () => {
             display="flex"
             flexDirection="column"
             alignItems="center"
-            p={2}
             fontSize={12}
             gap={0.5}
           >

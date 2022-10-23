@@ -14,12 +14,18 @@ const TimeSlots = (props) => {
     bookings,
     currentHour,
   } = props;
+
   const [minTimeslot, setMinTimeslot] = useState(0);
 
   // recheck timeslot validity based on hourly clock
   useEffect(() => {
     setMinTimeslot(currentHour);
   }, [currentHour]);
+
+  // reset timeslot whenever booking date is changed
+  useEffect(() => {
+    setSelectedTimeslot(null);
+  }, [bookingDate]);
 
   return (
     <>

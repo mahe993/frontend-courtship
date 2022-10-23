@@ -1,10 +1,12 @@
 import { Box } from "@mui/material";
-import { addDays, lightFormat } from "date-fns";
+import { addDays, isWithinInterval, lightFormat } from "date-fns";
 import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 
-const DateSelector = ({ register, watchBookingDate, currentHour }) => {
+const DateSelector = (props) => {
+  const { register, watchBookingDate, currentHour, reset } = props;
+
   const [stringDate, setStringDate] = useState();
   const [minDate, setMinDate] = useState(lightFormat(new Date(), "yyyy-MM-dd"));
   const [maxDate, setMaxDate] = useState(
@@ -29,6 +31,16 @@ const DateSelector = ({ register, watchBookingDate, currentHour }) => {
     if (watchBookingDate) {
       setStringDate(new Date(watchBookingDate).toString().slice(0, 16));
     }
+    if (
+      watchBookingDate &&
+      !isWithinInterval(new Date(watchBookingDate), {
+        start: new Date(minDate),
+        end: new Date(maxDate),
+      })
+    ) {
+      setStringDate("Invalid date. Select within 14 days period!");
+      reset();
+    }
   }, [watchBookingDate]);
 
   return (
@@ -44,7 +56,15 @@ const DateSelector = ({ register, watchBookingDate, currentHour }) => {
           cursor: pointer;
         `}
       />
-      <Box>{stringDate}</Box>
+      {stringDate && (
+        <Box
+          color={stringDate.includes("Invalid") ? "red" : "inherit"}
+          fontSize={stringDate.includes("Invalid") ? 8 : 12}
+          fontStyle={stringDate.includes("Invalid") && "italic"}
+        >
+          {stringDate}
+        </Box>
+      )}
     </>
   );
 };
