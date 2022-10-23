@@ -33,7 +33,9 @@ const Booking = ({ bookings }) => {
               --font-color: red;
             }
           `}
-          onClick={() => navigate(`/courtyard/court${booking.courtId}`)}
+          onClick={() => {
+            navigate("/bookings/success", { state: { bookingId: booking.id } });
+          }}
         >
           <Box width={"90px"} height={"60px"} minWidth="90px">
             <img

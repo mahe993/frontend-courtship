@@ -11,6 +11,9 @@ import axios from "axios";
 const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
   const [displayPictureFiles, setDisplayPictureFiles] = useState([]);
 
+  //userID get from auth0
+  const userId = 2;
+
   // react-hook-form methods
   const {
     register,
@@ -35,8 +38,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
           address: getValues("address"),
           description: getValues("description"),
           price: Number(getValues("price")),
-          //userID get from auth0
-          userId: `${2}`,
+          userId: userId,
         },
       });
       // check if pictures avail for upload, if so update court row with pic url

@@ -8,6 +8,7 @@ import CourtPage from "../pages/CourtPage";
 import BookingsPage from "../pages/BookingsPage";
 import AccountPage from "../pages/AccountPage";
 import TestPage from "../pages/TestPage";
+import SuccessfulBookingPage from "../pages/SuccessfulBookingPage";
 
 const RoutesComponent = () => {
   return (
@@ -20,7 +21,7 @@ const RoutesComponent = () => {
       <Route path="/about" element=<AboutUsPage /> />
       <Route path="/account" element=<AccountPage /> />
       <Route path="/test" element=<TestPage /> />
-
+      <Route path="/bookings/success" element=<SuccessfulBookingPage /> />
       <Route
         path="*"
         element={

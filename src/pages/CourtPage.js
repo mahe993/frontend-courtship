@@ -18,6 +18,8 @@ const CourtPage = () => {
   const [selectedTimeslot, setSelectedTimeslot] = useState();
   const [error, setError] = useState(false);
 
+  //get userId from auth
+  const userId = 2;
   const { courtId } = useParams();
   const navigate = useNavigate();
   const { register, getValues, watch, resetField } = useForm({
@@ -61,6 +63,29 @@ const CourtPage = () => {
     return () => clearInterval(clock);
   }, []);
 
+  //submit booking
+  const handleBook = async () => {
+    console.log(`${courtId}-${getValues("bookingDate")}-${selectedTimeslot}`);
+    try {
+      const req = await axios({
+        method: "POST",
+        url: `${BACKEND_URL}/bookings`,
+        data: {
+          bookingNumber: `${courtId}-${getValues(
+            "bookingDate"
+          )}-${selectedTimeslot}`,
+          userId: userId,
+          courtId: courtId,
+          timeslot: selectedTimeslot,
+          date: getValues("bookingDate"),
+        },
+      });
+      navigate("/bookings/success", { state: { bookingId: req.data.id } });
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
+
   return (
     court && (
       <Box
@@ -100,12 +125,9 @@ const CourtPage = () => {
               "No pictures available"
             )}
           </Box>
-          <Box p={1} fontSize={12}>
-            {court.courtName}
-          </Box>
-          <Box p={1} fontSize={12}>
-            ${court.price}/hr
-          </Box>
+          <Box fontSize={12}>{court.courtName}</Box>
+          <Box fontSize={10}>{court.address}</Box>
+          <Box fontSize={12}>${court.price}/hr</Box>
         </Box>
         <Box
           width="50%"
@@ -172,6 +194,7 @@ const CourtPage = () => {
                   color: darkgrey;
                 }
               `}
+              onClick={handleBook}
             >
               BOOK
             </Button>
