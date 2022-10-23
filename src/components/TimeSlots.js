@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TIME_SLOTS_ONE, TIME_SLOTS_TWO } from "../constants";
 import { lightFormat } from "date-fns";
 /** @jsxImportSource @emotion/react */
@@ -8,12 +8,18 @@ import _ from "lodash";
 
 const TimeSlots = (props) => {
   const {
-    minTimeslot,
     setSelectedTimeslot,
     selectedTimeslot,
     bookingDate,
     bookings,
+    currentHour,
   } = props;
+  const [minTimeslot, setMinTimeslot] = useState(0);
+
+  // recheck timeslot validity based on hourly clock
+  useEffect(() => {
+    setMinTimeslot(currentHour);
+  }, [currentHour]);
 
   return (
     <>

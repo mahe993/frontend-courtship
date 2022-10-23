@@ -5,21 +5,16 @@ import { BACKEND_URL } from "../constants";
 import { Box, Button } from "@mui/material";
 import PictureCarousel from "../components/PictureCarousel";
 import { useForm } from "react-hook-form";
-import { addDays, getHours, lightFormat } from "date-fns";
+import { getHours } from "date-fns";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import TimeSlots from "../components/TimeSlots";
+import DateSelector from "../components/DateSelector";
 
 const CourtPage = () => {
   const [court, setCourt] = useState();
   const [bookings, setBookings] = useState();
-  const [now, setNow] = useState(new Date());
-  const [minDate, setMinDate] = useState(lightFormat(new Date(), "yyyy-MM-dd"));
-  const [maxDate, setMaxDate] = useState(
-    lightFormat(addDays(new Date(minDate), 14), "yyyy-MM-dd")
-  );
-  const [minTimeslot, setMinTimeslot] = useState(0);
-  const [stringDate, setStringDate] = useState();
+  const [currentHour, setCurrentHour] = useState(getHours(new Date()));
   const [selectedTimeslot, setSelectedTimeslot] = useState();
   const [error, setError] = useState(false);
 
@@ -58,38 +53,13 @@ const CourtPage = () => {
     }
   };
 
-  // internal clock on mount
+  // internal clock on mount. sets current hour every second
   useEffect(() => {
-    const clock = setInterval(() => setNow(new Date()), 1000);
+    const clock = setInterval(() => {
+      setCurrentHour(getHours(new Date()));
+    }, 1000);
     return () => clearInterval(clock);
   }, []);
-
-  // recheck date validity based on clock
-  useEffect(() => {
-    if (getHours(now) > 19) {
-      return setMinDate(lightFormat(addDays(now, 1), "yyyy-MM-dd"));
-    }
-    setMinDate(lightFormat(now, "yyyy-MM-dd"));
-  }, [now]);
-
-  // when min date changes, max date changes
-  useEffect(() => {
-    setMaxDate(lightFormat(addDays(new Date(minDate), 14), "yyyy-MM-dd"));
-  }, [minDate]);
-
-  // recheck timeslot validity based on clock
-  useEffect(() => {
-    if (getHours(now) > 9) {
-      return setMinTimeslot(getHours(now));
-    }
-  }, [now]);
-
-  // when user selects booking date. show the date in string format
-  useEffect(() => {
-    if (getValues("bookingDate")) {
-      setStringDate(new Date(getValues("bookingDate")).toString().slice(0, 16));
-    }
-  }, [watch("bookingDate")]);
 
   return (
     court && (
@@ -160,20 +130,13 @@ const CourtPage = () => {
             p={2}
             fontSize={12}
           >
-            <label htmlFor="bookingDate">Select Date</label>
-            <input
-              type="date"
-              id="bookingDate"
-              {...register("bookingDate", {
+            <DateSelector
+              register={register("bookingDate", {
                 required: "This field is required",
               })}
-              min={minDate}
-              max={maxDate}
-              css={css`
-                cursor: pointer;
-              `}
+              watchBookingDate={watch("bookingDate")}
+              currentHour={currentHour}
             />
-            <Box>{stringDate}</Box>
           </Box>
           <Box
             maxWidth="100%"
@@ -186,7 +149,7 @@ const CourtPage = () => {
           >
             <Box>Select Timeslot</Box>
             <TimeSlots
-              minTimeslot={minTimeslot}
+              currentHour={currentHour}
               setSelectedTimeslot={setSelectedTimeslot}
               selectedTimeslot={selectedTimeslot}
               bookingDate={getValues("bookingDate")}
