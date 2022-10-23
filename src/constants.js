@@ -5,7 +5,6 @@ import axios from "axios";
 const backendURL = (devEnv) => {
   switch (devEnv) {
     case "development":
-      console.log(devEnv);
       return process.env.REACT_APP_DEVELOPMENT_BACKEND_URL;
   }
 };

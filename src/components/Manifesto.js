@@ -6,7 +6,7 @@ const Manifesto = () => {
     <>
       <h2>Welcome to Courtship™</h2>
       <br />
-      <Box width="90%" m="auto">
+      <Box width="90%" m="auto" fontSize={10}>
         <Box component="p" fontWeight="bold">
           Tennis lovers' space!
         </Box>

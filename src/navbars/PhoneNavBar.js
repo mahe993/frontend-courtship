@@ -1,12 +1,10 @@
+import { Avatar, Box, Link, useTheme } from "@mui/material";
 import React from "react";
-import { Avatar, Box, useTheme, Link } from "@mui/material";
-import { NAV_ITEMS } from "../constants";
 import { useNavigate } from "react-router-dom";
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import Branding from "./Branding";
+import MenuDrawer from "../drawers/MenuDrawer";
+import BrandLogo from "../components/BrandLogo";
 
-const TabletNavBar = () => {
+const PhoneNavBar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -17,8 +15,9 @@ const TabletNavBar = () => {
       height={"10vh"}
       bgcolor={theme.palette.success.dark}
       display="flex"
-      fontSize={10}
       justifyContent="space-between"
+      fontSize={10}
+      minWidth="360px"
     >
       <Box display="flex" gap={1} maxWidth="33%" height="inherit">
         <Box display="flex" alignItems="center" ml={1}>
@@ -32,7 +31,7 @@ const TabletNavBar = () => {
           {"!userSignedIn" ? (
             <Link
               component="button"
-              variant="subtitle2"
+              variant="overline"
               color="inherit"
               onClick={() => navigate("/login")}
               fontSize="inherit"
@@ -46,38 +45,18 @@ const TabletNavBar = () => {
       </Box>
       <Box
         display="flex"
-        gap={3}
         alignItems="center"
-        maxWidth="50%"
-        left="50%"
-        position="absolute"
+        position="relative"
+        left="-20px"
         height="inherit"
-        css={css`
-          transform: translate(-50%);
-        `}
       >
-        {NAV_ITEMS.map((item) => (
-          <Link
-            component="button"
-            key={item.name}
-            variant="overline"
-            color="inherit"
-            underline="hover"
-            onClick={() => navigate(item.path)}
-            fontSize="inherit"
-            css={css`
-              min-width: 65px;
-            `}
-          >
-            {item.name}
-          </Link>
-        ))}
+        <BrandLogo />
       </Box>
-      <Box display="flex" alignItems="center" mr={1}>
-        <Branding />
+      <Box mr={1} alignItems="center" display="flex">
+        <MenuDrawer />
       </Box>
     </Box>
   );
 };
 
-export default TabletNavBar;
+export default PhoneNavBar;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { BACKEND_URL, TIME_SLOTS_ONE, TIME_SLOTS_TWO } from "../constants";
+import { BACKEND_URL } from "../constants";
 import { Box, Button } from "@mui/material";
 import PictureCarousel from "../components/PictureCarousel";
 import { useForm } from "react-hook-form";
@@ -12,33 +12,28 @@ import TimeSlots from "../components/TimeSlots";
 
 const CourtPage = () => {
   const [court, setCourt] = useState();
-  const [today, setToday] = useState(new Date());
+  const [bookings, setBookings] = useState();
+  const [now, setNow] = useState(new Date());
   const [minDate, setMinDate] = useState(lightFormat(new Date(), "yyyy-MM-dd"));
   const [maxDate, setMaxDate] = useState(
     lightFormat(addDays(new Date(minDate), 14), "yyyy-MM-dd")
   );
+  const [minTimeslot, setMinTimeslot] = useState(0);
   const [stringDate, setStringDate] = useState();
-  const [timeslot, setTimeslot] = useState();
+  const [selectedTimeslot, setSelectedTimeslot] = useState();
+  const [error, setError] = useState(false);
 
   const { courtId } = useParams();
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    watch,
-    setError,
-    clearErrors,
-    reset,
-    formState: { errors, isValid, isSubmitSuccessful },
-  } = useForm({
+  const { register, getValues, watch, reset } = useForm({
     delayError: 150,
     mode: "onChange",
   });
 
-  // get court details on mount
+  // get court details and all bookings of the court on mount
   useEffect(() => {
     getCourt();
+    getCourtBookings();
   }, []);
 
   const getCourt = async () => {
@@ -52,25 +47,42 @@ const CourtPage = () => {
     }
   };
 
+  const getCourtBookings = async () => {
+    try {
+      const res = await axios({
+        url: `${BACKEND_URL}/bookings/court${courtId}`,
+      });
+      setBookings(res.data);
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
+
   // internal clock on mount
   useEffect(() => {
-    const clock = setInterval(() => setToday(new Date()), 1000);
+    const clock = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(clock);
   }, []);
 
-  // recheck date/timeslot validity every second
+  // recheck date validity based on clock
   useEffect(() => {
-    if (getHours(today) > 19) {
-      console.log("here");
-      return setMinDate(lightFormat(addDays(today, 1), "yyyy-MM-dd"));
+    if (getHours(now) > 19) {
+      return setMinDate(lightFormat(addDays(now, 1), "yyyy-MM-dd"));
     }
-    setMinDate(lightFormat(today, "yyyy-MM-dd"));
-  }, [today]);
+    setMinDate(lightFormat(now, "yyyy-MM-dd"));
+  }, [now]);
 
   // when min date changes, max date changes
   useEffect(() => {
     setMaxDate(lightFormat(addDays(new Date(minDate), 14), "yyyy-MM-dd"));
   }, [minDate]);
+
+  // recheck timeslot validity based on clock
+  useEffect(() => {
+    if (getHours(now) > 9) {
+      return setMinTimeslot(getHours(now));
+    }
+  }, [now]);
 
   // when user selects booking date. show the date in string format
   useEffect(() => {
@@ -88,6 +100,8 @@ const CourtPage = () => {
         flexWrap="wrap"
         display="flex"
         justifyContent="center"
+        bgcolor="rgba(0, 0, 0, 0.5)"
+        borderRadius="25px"
       >
         <Box
           width="50%"
@@ -116,20 +130,10 @@ const CourtPage = () => {
               "No pictures available"
             )}
           </Box>
-          <Box
-            borderRadius="25px"
-            bgcolor="rgba(0, 0, 0, 0.5)"
-            p={1}
-            fontSize={12}
-          >
+          <Box p={1} fontSize={12}>
             {court.courtName}
           </Box>
-          <Box
-            borderRadius="25px"
-            bgcolor="rgba(0, 0, 0, 0.5)"
-            p={1}
-            fontSize={12}
-          >
+          <Box p={1} fontSize={12}>
             ${court.price}/hr
           </Box>
         </Box>
@@ -144,14 +148,7 @@ const CourtPage = () => {
           gap={1.5}
           className="right-box"
         >
-          <Box
-            fontStyle="italic"
-            whiteSpace={"pre-line"}
-            borderRadius="25px"
-            bgcolor="rgba(0, 0, 0, 0.5)"
-            p={1}
-            fontSize={12}
-          >
+          <Box fontStyle="italic" whiteSpace={"pre-line"} p={1} fontSize={12}>
             {court.description}
           </Box>
           <Box
@@ -160,8 +157,6 @@ const CourtPage = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            borderRadius="25px"
-            bgcolor="rgba(0, 0, 0, 0.5)"
             p={2}
             fontSize={12}
           >
@@ -174,6 +169,9 @@ const CourtPage = () => {
               })}
               min={minDate}
               max={maxDate}
+              css={css`
+                cursor: pointer;
+              `}
             />
             <Box>{stringDate}</Box>
           </Box>
@@ -182,26 +180,31 @@ const CourtPage = () => {
             display="flex"
             flexDirection="column"
             alignItems="center"
-            borderRadius="25px"
-            bgcolor="rgba(0, 0, 0, 0.5)"
             p={2}
             fontSize={12}
             gap={0.5}
           >
             <Box>Select Timeslot</Box>
             <TimeSlots
-              today={today}
-              setTimeslot={setTimeslot}
-              timeslot={timeslot}
+              minTimeslot={minTimeslot}
+              setSelectedTimeslot={setSelectedTimeslot}
+              selectedTimeslot={selectedTimeslot}
               bookingDate={getValues("bookingDate")}
+              bookings={bookings}
             />
           </Box>
-          <Box>
+          <Box display="flex" flexDirection="column" alignItems="center">
+            {error && (
+              <Box color="red" fontSize={6} fontStyle="italic">
+                Please select a valid date and time for your booking!
+              </Box>
+            )}
             <Button
               variant="contained"
               color="success"
               size="small"
-              disabled={!getValues("bookingDate") || !timeslot}
+              fullWidth={false}
+              disabled={!getValues("bookingDate") || !selectedTimeslot || error}
               css={css`
                 :disabled {
                   color: darkgrey;

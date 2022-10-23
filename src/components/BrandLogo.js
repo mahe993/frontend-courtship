@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 
-const Branding = () => {
+const BrandLogo = () => {
   const navigate = useNavigate();
 
   return (
@@ -30,4 +30,4 @@ const Branding = () => {
   );
 };
 
-export default Branding;
+export default BrandLogo;

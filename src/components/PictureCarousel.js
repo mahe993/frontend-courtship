@@ -19,7 +19,7 @@ const PictureCarousel = ({ pictures }) => {
       }}
       activeIndicatorIconButtonProps={{
         style: {
-          color: "darkgreen",
+          color: "lightgreen",
         },
       }}
       indicatorIconButtonProps={{
