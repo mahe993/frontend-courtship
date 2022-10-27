@@ -1,3 +1,4 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -9,6 +10,7 @@ const SuccessfulBookingPage = () => {
   const [newestBooking, setNewestBooking] = useState();
 
   const navigate = useNavigate();
+  const { getAccessTokenSilently } = useAuth0();
 
   //get bookingId from router
   const { state } = useLocation();
@@ -25,8 +27,14 @@ const SuccessfulBookingPage = () => {
 
   const getBooking = async () => {
     try {
+      const accessToken = await getAccessTokenSilently({
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+      });
       const res = await axios({
         url: `${BACKEND_URL}/bookings/success/${state.bookingId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
       setNewestBooking(res.data);
     } catch (err) {

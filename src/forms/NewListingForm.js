@@ -24,7 +24,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
     setError,
     clearErrors,
     reset,
-    formState: { errors, isValid, isSubmitSuccessful },
+    formState: { errors, isValid },
   } = useForm({ delayError: 500, mode: "onChange" });
 
   // post court listing
@@ -61,7 +61,6 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
             },
             data: formData,
           });
-          console.log(picRes);
         } catch (err) {
           throw new Error(err);
         }
@@ -70,7 +69,9 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
       setOpenForm(false);
       // open snackbar
       setSnackBarOpen(true);
+      // reset form fields
       reset();
+      // reset picture previews
       setDisplayPictureFiles([]);
     } catch (err) {
       throw new Error(err);
@@ -120,13 +121,6 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
     fileUploadPreview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch("courtPictures")]);
-
-  // reset form after successful submit *note that this reset() is not working due to isSubmitSuccessful triggering true with promise chain
-  // useEffect(() => {
-  //   reset();
-  //   setDisplayPictureFiles([]);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isSubmitSuccessful]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>

@@ -10,6 +10,7 @@ import { getHours } from "date-fns";
 import { css } from "@emotion/react";
 import TimeSlots from "../components/TimeSlots";
 import DateSelector from "../components/DateSelector";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CourtPage = () => {
   const [court, setCourt] = useState();
@@ -19,7 +20,7 @@ const CourtPage = () => {
   const [error, setError] = useState(false);
 
   //get userId from auth
-  const userId = 2;
+  const { user, getAccessTokenSilently } = useAuth0();
   const { courtId } = useParams();
   const navigate = useNavigate();
   const { register, getValues, watch, resetField } = useForm({
@@ -65,16 +66,19 @@ const CourtPage = () => {
 
   //submit booking
   const handleBook = async () => {
-    console.log(`${courtId}-${getValues("bookingDate")}-${selectedTimeslot}`);
     try {
+      const accessToken = await getAccessTokenSilently();
       const req = await axios({
         method: "POST",
         url: `${BACKEND_URL}/bookings`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
         data: {
           bookingNumber: `${courtId}-${getValues(
             "bookingDate"
           )}-${selectedTimeslot}`,
-          userId: userId,
+          userId: user.sub,
           courtId: courtId,
           timeslot: selectedTimeslot,
           date: getValues("bookingDate"),
