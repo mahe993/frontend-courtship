@@ -89,7 +89,7 @@ const SuccessfulBookingPage = () => {
                 </Box>
               </Box>
               <Box display="flex">
-                <Box minWidth="70px">Address</Box>
+                <Box minWidth="70px">Address:</Box>
                 <Box>{newestBooking.address}</Box>
               </Box>
               <Box fontSize={6} fontStyle="italic" fontWeight="bold">

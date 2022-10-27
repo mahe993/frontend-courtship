@@ -82,6 +82,8 @@ const CourtPage = () => {
       });
       navigate("/bookings/success", { state: { bookingId: req.data.id } });
     } catch (err) {
+      // break the app intentionally to force a user side app refresh
+      setError(true);
       throw new Error(err);
     }
   };

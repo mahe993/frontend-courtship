@@ -9,6 +9,7 @@ import BookingsPage from "../pages/BookingsPage";
 import AccountPage from "../pages/AccountPage";
 import TestPage from "../pages/TestPage";
 import SuccessfulBookingPage from "../pages/SuccessfulBookingPage";
+import ProtectedRoute from "../routes/ProtectedRoute";
 
 const RoutesComponent = () => {
   return (
@@ -17,10 +18,12 @@ const RoutesComponent = () => {
       <Route path="/courtyard" element=<CourtyardPage /> />
       <Route path="/courtyard/court:courtId" element=<CourtPage /> />
       <Route path="/listings" element=<ListingsPage /> />
-      <Route path="/bookings" element=<BookingsPage /> />
+      <Route
+        path="/bookings"
+        element=<ProtectedRoute component={BookingsPage} />
+      />
       <Route path="/about" element=<AboutUsPage /> />
       <Route path="/account" element=<AccountPage /> />
-      <Route path="/test" element=<TestPage /> />
       <Route path="/bookings/success" element=<SuccessfulBookingPage /> />
       <Route
         path="*"
@@ -30,6 +33,8 @@ const RoutesComponent = () => {
           </main>
         }
       />
+
+      <Route path="/test" element=<TestPage /> />
     </Routes>
   );
 };
