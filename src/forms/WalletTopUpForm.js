@@ -4,16 +4,14 @@ import React, { useEffect } from "react";
 import { css } from "@emotion/react";
 import { useForm } from "react-hook-form";
 
-const WalletTopUpForm = () => {
-  //listen for user authentication, get wallet balance value
-
+const WalletTopUpForm = ({ walletBalance }) => {
   // react-hook-form methods
   const {
     register,
     handleSubmit,
     getValues,
     reset,
-    formState: { errors, isValid, isSubmitSuccessful },
+    formState: { errors, isValid },
   } = useForm({ delayError: 300, mode: "onChange" });
 
   // handleSubmit callback fns
@@ -23,11 +21,6 @@ const WalletTopUpForm = () => {
   const onError = (err) => {
     throw new Error(err);
   };
-
-  // on successful form submit, reset fields
-  useEffect(() => {
-    reset();
-  }, [isSubmitSuccessful]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
@@ -71,7 +64,7 @@ const WalletTopUpForm = () => {
               height: 23.5px;
             `}
           >
-            {"wallet balance"}
+            ${walletBalance}
           </Box>
         </Box>
         <Box
