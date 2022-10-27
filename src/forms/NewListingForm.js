@@ -41,11 +41,11 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
           Authorization: `Bearer ${accessToken}`,
         },
         data: {
-          courtName: data.courtName,
-          address: data.address,
-          description: data.description,
-          price: Number(data.price),
-          userId: `${user.sub}`,
+          courtName: getValues("courtName"),
+          address: getValues("address"),
+          description: getValues("description"),
+          price: Number(getValues("price")),
+          userId: user.sub,
         },
       });
       // check if pictures avail for upload, if so update court row with pic url
@@ -70,6 +70,8 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
       setOpenForm(false);
       // open snackbar
       setSnackBarOpen(true);
+      reset();
+      setDisplayPictureFiles([]);
     } catch (err) {
       throw new Error(err);
     }
@@ -119,13 +121,12 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch("courtPictures")]);
 
-  // reset form after successful submit
-  useEffect(() => {
-    console.log(isSubmitSuccessful);
-    reset();
-    setDisplayPictureFiles([]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful]);
+  // reset form after successful submit *note that this reset() is not working due to isSubmitSuccessful triggering true with promise chain
+  // useEffect(() => {
+  //   reset();
+  //   setDisplayPictureFiles([]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isSubmitSuccessful]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
