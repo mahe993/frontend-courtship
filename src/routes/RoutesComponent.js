@@ -17,13 +17,19 @@ const RoutesComponent = () => {
       <Route path="/" element=<LandingPage /> />
       <Route path="/courtyard" element=<CourtyardPage /> />
       <Route path="/courtyard/court:courtId" element=<CourtPage /> />
-      <Route path="/listings" element=<ListingsPage /> />
+      <Route
+        path="/listings"
+        element=<ProtectedRoute component={ListingsPage} />
+      />
       <Route
         path="/bookings"
         element=<ProtectedRoute component={BookingsPage} />
       />
       <Route path="/about" element=<AboutUsPage /> />
-      <Route path="/account" element=<AccountPage /> />
+      <Route
+        path="/account"
+        element=<ProtectedRoute component={AccountPage} />
+      />
       <Route path="/bookings/success" element=<SuccessfulBookingPage /> />
       <Route
         path="*"

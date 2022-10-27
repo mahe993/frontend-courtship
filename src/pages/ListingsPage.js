@@ -8,11 +8,14 @@ import Listing from "../components/Listing";
 import NewListingForm from "../forms/NewListingForm";
 import axios from "axios";
 import { BACKEND_URL } from "../constants";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const ListingsPage = () => {
   const [userCourts, setUserCourts] = useState();
   const [openForm, setOpenForm] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+
+  const { user, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     getUserCourts();
@@ -21,8 +24,15 @@ const ListingsPage = () => {
   // implement Auth0 to get userId and clear initial userCourts state
   const getUserCourts = async () => {
     try {
+      const accessToken = await getAccessTokenSilently({
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+      });
+
       const res = await axios({
-        url: `${BACKEND_URL}/courts/${2}`,
+        url: `${BACKEND_URL}/courts/${user.sub}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
       setUserCourts(res.data);
     } catch (err) {

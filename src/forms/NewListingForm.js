@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { BACKEND_URL, returnFileSize, validateFileType } from "../constants";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
   const [displayPictureFiles, setDisplayPictureFiles] = useState([]);
 
   //userID get from auth0
-  const userId = 2;
+  const { user, getAccessTokenSilently } = useAuth0();
 
   // react-hook-form methods
   const {
@@ -27,18 +28,24 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
   } = useForm({ delayError: 500, mode: "onChange" });
 
   // post court listing
-  const postCourtListing = async () => {
+  const postCourtListing = async (data) => {
     try {
+      const accessToken = await getAccessTokenSilently({
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+      });
       // create new court row
       const res = await axios({
         method: "post",
         url: `${BACKEND_URL}/courts`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
         data: {
-          courtName: getValues("courtName"),
-          address: getValues("address"),
-          description: getValues("description"),
-          price: Number(getValues("price")),
-          userId: userId,
+          courtName: data.courtName,
+          address: data.address,
+          description: data.description,
+          price: Number(data.price),
+          userId: `${user.sub}`,
         },
       });
       // check if pictures avail for upload, if so update court row with pic url
@@ -49,6 +56,9 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
           const picRes = await axios({
             method: "post",
             url: `${BACKEND_URL}/firebase/courtpics/${res.data.id}`,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
             data: formData,
           });
           console.log(picRes);
@@ -68,7 +78,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
   // handleSubmit callback fns
   const onSubmit = (data) => {
     //post to DB
-    postCourtListing();
+    postCourtListing(data);
   };
   const onError = (err) => {
     throw new Error(err);
@@ -111,6 +121,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
 
   // reset form after successful submit
   useEffect(() => {
+    console.log(isSubmitSuccessful);
     reset();
     setDisplayPictureFiles([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
