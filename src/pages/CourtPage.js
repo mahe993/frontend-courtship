@@ -65,13 +65,16 @@ const CourtPage = () => {
     return () => clearInterval(clock);
   }, []);
 
-  //submit booking
+  // submit booking
   const handleBook = async () => {
     if (!isAuthenticated) {
       return loginWithRedirect();
     }
     try {
       const accessToken = await getAccessTokenSilently();
+      // remove money from account first
+
+      // record booking
       const req = await axios({
         method: "POST",
         url: `${BACKEND_URL}/bookings`,

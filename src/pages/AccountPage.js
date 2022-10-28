@@ -1,5 +1,5 @@
 import { Alert, Avatar, Badge, Box, Button, Snackbar } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import AccountForm from "../forms/AccountForm";
 import WalletTopUpForm from "../forms/WalletTopUpForm";
@@ -14,28 +14,11 @@ const AccountPage = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
+  // get user details from user context
   const { userDetails, setUserDetails } = useUserContext();
 
   // get userId from auth
   const { user, getAccessTokenSilently, logout } = useAuth0();
-
-  // get user details on mount
-  useEffect(() => {
-    getUserDetails();
-  }, []);
-
-  const getUserDetails = async () => {
-    try {
-      const accessToken = await getAccessTokenSilently();
-      const details = await axios({
-        url: `${BACKEND_URL}/users/${user.sub}/${user.email}`,
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      setUserDetails(details.data);
-    } catch (err) {
-      throw new Error(err);
-    }
-  };
 
   // change profile pic
   const handleProfilePic = async (e) => {

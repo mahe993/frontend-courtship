@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
@@ -9,8 +9,10 @@ import { BACKEND_URL } from "../constants";
 import { useUserContext } from "../contexts/UserContext";
 
 const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
+  // get user details from user context
   const { userDetails, setUserDetails } = useUserContext();
-  //get userId from auth0
+
+  // get userId from auth0
   const { user, getAccessTokenSilently } = useAuth0();
 
   // react-hook-form methods
@@ -22,11 +24,10 @@ const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
 
   // handleSubmit callback fns
   const onSubmit = async (values) => {
-    //update DB users table username/phoneNumber col where userId = userId
+    //update DB users table username/phoneNumber col where userId = user.sub
     const updateFields = Object.keys(touchedFields).map((key) => {
       return { [key]: values[key] };
     });
-    console.log({ ...updateFields[0], ...updateFields[1] });
     try {
       const accessToken = await getAccessTokenSilently();
       const update = await axios({

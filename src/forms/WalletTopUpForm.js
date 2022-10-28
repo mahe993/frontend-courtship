@@ -9,7 +9,9 @@ import { BACKEND_URL } from "../constants";
 import { useUserContext } from "../contexts/UserContext";
 
 const WalletTopUpForm = ({ setAlertMessage, setSnackBarOpen }) => {
+  // get user details from user context
   const { userDetails, setUserDetails } = useUserContext();
+
   // react-hook-form methods
   const {
     register,
@@ -23,7 +25,7 @@ const WalletTopUpForm = ({ setAlertMessage, setSnackBarOpen }) => {
 
   // handleSubmit callback fns
   const onSubmit = async (values) => {
-    //update DB users table wallet col where userId = userId
+    //update DB users table wallet col where userId = user.sub
     try {
       const accessToken = await getAccessTokenSilently();
       const topUp = await axios({

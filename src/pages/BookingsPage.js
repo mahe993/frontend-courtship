@@ -9,7 +9,7 @@ const BookingsPage = () => {
   const [userBookings, setUserBookings] = useState();
 
   //get userId from auth
-  const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
 
   // get all bookings by user on mount
   useEffect(() => {

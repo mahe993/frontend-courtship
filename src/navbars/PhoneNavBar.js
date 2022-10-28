@@ -1,6 +1,5 @@
 import { Avatar, Box, Link, useTheme } from "@mui/material";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import MenuDrawer from "../drawers/MenuDrawer";
 import BrandLogo from "../components/BrandLogo";
 import { useUserContext } from "../contexts/UserContext";
@@ -8,7 +7,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const PhoneNavBar = ({ isAuthenticated, avatarUrl }) => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const { userDetails } = useUserContext();
   const { loginWithRedirect } = useAuth0();
 

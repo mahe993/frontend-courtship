@@ -53,7 +53,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
         const formData = new FormData();
         displayPictureFiles.forEach((pic) => formData.append("pictures", pic));
         try {
-          const picRes = await axios({
+          await axios({
             method: "post",
             url: `${BACKEND_URL}/firebase/courtpics/${res.data.id}`,
             headers: {
