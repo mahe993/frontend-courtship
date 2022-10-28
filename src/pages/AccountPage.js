@@ -1,4 +1,4 @@
-import { Alert, Avatar, Badge, Box, Snackbar } from "@mui/material";
+import { Alert, Avatar, Badge, Box, Button, Snackbar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import AccountForm from "../forms/AccountForm";
@@ -6,34 +6,50 @@ import WalletTopUpForm from "../forms/WalletTopUpForm";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { BACKEND_URL } from "../constants";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { useUserContext } from "../contexts/UserContext";
 
 const AccountPage = () => {
-  const [userDetails, setUserDetails] = useState("");
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
+  const { userDetails, setUserDetails } = useUserContext();
+
   // get userId from auth
-  const { user, getAccessTokenSilently } = useAuth0();
+  const { user, getAccessTokenSilently, logout } = useAuth0();
 
   // get user details on mount
   useEffect(() => {
     getUserDetails();
-    console.log(userDetails);
   }, []);
-
-  useEffect(() => {
-    console.log(userDetails, user.sub);
-  }, [userDetails]);
 
   const getUserDetails = async () => {
     try {
       const accessToken = await getAccessTokenSilently();
-      console.log(accessToken);
       const details = await axios({
         url: `${BACKEND_URL}/users/${user.sub}/${user.email}`,
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setUserDetails(details.data);
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
+
+  // change profile pic
+  const handleProfilePic = async (e) => {
+    const formData = new FormData();
+    formData.append("picture", e.target.files[0]);
+    try {
+      const accessToken = await getAccessTokenSilently();
+      const postProfilePic = await axios({
+        method: "POST",
+        url: `${BACKEND_URL}/firebase/${user.sub}/profilepic`,
+        headers: { Authorization: `Bearer ${accessToken}` },
+        data: formData,
+      });
+      setUserDetails(postProfilePic.data);
     } catch (err) {
       throw new Error(err);
     }
@@ -52,25 +68,57 @@ const AccountPage = () => {
         <Badge
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          badgeContent={<EditIcon fontSize="large" />}
+          badgeContent={
+            <label
+              htmlFor="contained-button-file"
+              css={css`
+                cursor: pointer;
+              `}
+            >
+              <input
+                accept="image/*"
+                id="contained-button-file"
+                multiple
+                type="file"
+                css={css`
+                  display: none;
+                `}
+                onChange={handleProfilePic}
+              />
+              <EditIcon fontSize="large" />
+            </label>
+          }
         >
           <Avatar
-            alt="Travis Howard"
-            src="/static/images/avatar/2.jpg"
+            alt="profile"
+            src={
+              userDetails?.profilePicture?.downloadUrl
+                ? userDetails.profilePicture.downloadUrl
+                : ""
+            }
             sx={{ width: "150px", height: "150px" }}
           />
         </Badge>
         <Box bgcolor="rgba(0, 0, 0, 0.4)" borderRadius="15px" pt={1} pb={1}>
-          <AccountForm userDetails={userDetails} />
-        </Box>
-        <Box bgcolor="rgba(0, 0, 0, 0.4)" borderRadius="15px" pt={1} pb={1}>
-          <WalletTopUpForm
-            walletBalance={userDetails.wallet}
-            setUserDetails={setUserDetails}
+          <AccountForm
             setSnackBarOpen={setSnackBarOpen}
             setAlertMessage={setAlertMessage}
           />
         </Box>
+        <Box bgcolor="rgba(0, 0, 0, 0.4)" borderRadius="15px" pt={1} pb={1}>
+          <WalletTopUpForm
+            setSnackBarOpen={setSnackBarOpen}
+            setAlertMessage={setAlertMessage}
+          />
+        </Box>
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          onClick={() => logout({ returnTo: window.location.origin })}
+        >
+          Logout
+        </Button>
       </Box>
       <Snackbar
         open={snackBarOpen}

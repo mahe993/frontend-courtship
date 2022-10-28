@@ -6,10 +6,10 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BACKEND_URL } from "../constants";
+import { useUserContext } from "../contexts/UserContext";
 
-const WalletTopUpForm = (props) => {
-  const { walletBalance, setUserDetails, setAlertMessage, setSnackBarOpen } =
-    props;
+const WalletTopUpForm = ({ setAlertMessage, setSnackBarOpen }) => {
+  const { userDetails, setUserDetails } = useUserContext();
   // react-hook-form methods
   const {
     register,
@@ -23,7 +23,6 @@ const WalletTopUpForm = (props) => {
 
   // handleSubmit callback fns
   const onSubmit = async (values) => {
-    console.log(values.wallet);
     //update DB users table wallet col where userId = userId
     try {
       const accessToken = await getAccessTokenSilently();
@@ -89,7 +88,7 @@ const WalletTopUpForm = (props) => {
               height: 23.5px;
             `}
           >
-            ${walletBalance}
+            ${userDetails?.wallet}
           </Box>
         </Box>
         <Box

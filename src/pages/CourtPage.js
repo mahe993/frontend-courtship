@@ -20,7 +20,8 @@ const CourtPage = () => {
   const [error, setError] = useState(false);
 
   //get userId from auth
-  const { user, getAccessTokenSilently } = useAuth0();
+  const { user, getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
+    useAuth0();
   const { courtId } = useParams();
   const navigate = useNavigate();
   const { register, getValues, watch, resetField } = useForm({
@@ -66,6 +67,9 @@ const CourtPage = () => {
 
   //submit booking
   const handleBook = async () => {
+    if (!isAuthenticated) {
+      return loginWithRedirect();
+    }
     try {
       const accessToken = await getAccessTokenSilently();
       const req = await axios({

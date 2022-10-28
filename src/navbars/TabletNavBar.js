@@ -5,10 +5,14 @@ import { useNavigate } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import BrandLogo from "../components/BrandLogo";
+import { useUserContext } from "../contexts/UserContext";
+import { useAuth0 } from "@auth0/auth0-react";
 
-const TabletNavBar = () => {
+const TabletNavBar = ({ isAuthenticated, avatarUrl }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { userDetails } = useUserContext();
+  const { loginWithRedirect } = useAuth0();
 
   return (
     <Box
@@ -23,24 +27,34 @@ const TabletNavBar = () => {
       <Box display="flex" gap={1} maxWidth="33%" height="inherit">
         <Box display="flex" alignItems="center" ml={1}>
           <Avatar
-            src="/broken-image.jpg"
+            src={avatarUrl}
             sx={{ width: 30, height: 30 }}
             alt="username"
           />
         </Box>
         <Box display="flex" alignItems="center">
-          {"!userSignedIn" ? (
+          {!isAuthenticated ? (
             <Link
               component="button"
               variant="subtitle2"
               color="inherit"
-              onClick={() => navigate("/login")}
+              onClick={() => loginWithRedirect()}
               fontSize="inherit"
             >
               Login/Signup
             </Link>
           ) : (
-            "username"
+            <Box display="flex" flexDirection="column">
+              <Box display="flex" justifyContent="center">
+                {userDetails &&
+                  (userDetails?.username
+                    ? userDetails.username
+                    : userDetails.email)}
+              </Box>
+              <Box display="flex" justifyContent="center">
+                {userDetails && `$${userDetails.wallet}`}
+              </Box>
+            </Box>
           )}
         </Box>
       </Box>

@@ -4,8 +4,12 @@ import { useForm } from "react-hook-form";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
+import { BACKEND_URL } from "../constants";
+import { useUserContext } from "../contexts/UserContext";
 
-const AccountForm = ({ userDetails }) => {
+const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
+  const { userDetails, setUserDetails } = useUserContext();
   //get userId from auth0
   const { user, getAccessTokenSilently } = useAuth0();
 
@@ -13,15 +17,34 @@ const AccountForm = ({ userDetails }) => {
   const {
     register,
     handleSubmit,
-    getValues,
-    reset,
-    formState: { errors, isValid, isSubmitSuccessful },
+    formState: { errors, isValid, touchedFields },
   } = useForm({ delayError: 300, mode: "onChange" });
 
   // handleSubmit callback fns
-  const onSubmit = (data) => {
+  const onSubmit = async (values) => {
     //update DB users table username/phoneNumber col where userId = userId
+    const updateFields = Object.keys(touchedFields).map((key) => {
+      return { [key]: values[key] };
+    });
+    console.log({ ...updateFields[0], ...updateFields[1] });
+    try {
+      const accessToken = await getAccessTokenSilently();
+      const update = await axios({
+        method: "PUT",
+        url: `${BACKEND_URL}/users/${user.sub}/details`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: { ...updateFields[0], ...updateFields[1] },
+      });
+      setUserDetails(update.data);
+      setAlertMessage("Account info updated!");
+      setSnackBarOpen(true);
+    } catch (err) {
+      throw new Error(err);
+    }
   };
+
   const onError = (err) => {
     throw new Error(err);
   };
@@ -55,7 +78,8 @@ const AccountForm = ({ userDetails }) => {
           </Box>
           <input
             defaultValue={
-              userDetails.username ? userDetails.username : user.email
+              userDetails &&
+              (userDetails.username ? userDetails.username : userDetails.email)
             }
             autoComplete="off"
             id="username"
@@ -116,7 +140,7 @@ const AccountForm = ({ userDetails }) => {
           </Box>
           <input
             autoComplete="off"
-            defaultValue={userDetails.phoneNumber && userDetails.phoneNumber}
+            defaultValue={userDetails && userDetails.phoneNumber}
             id="phoneNumber"
             type="phoneNumber"
             placeholder="91234567"
@@ -127,7 +151,11 @@ const AccountForm = ({ userDetails }) => {
               },
               maxLength: {
                 value: 8,
-                message: "Phone number should not exceed 8 chars!",
+                message: "Phone number should be 8 chars!",
+              },
+              minLength: {
+                value: 8,
+                message: "Phone number should be 8 chars!",
               },
             })}
             css={css`
@@ -147,7 +175,7 @@ const AccountForm = ({ userDetails }) => {
             color="red"
             mt={-1}
             width="60vw"
-            pl={11}
+            pl={8}
             textAlign="center"
           >
             {errors.phoneNumber.message}
