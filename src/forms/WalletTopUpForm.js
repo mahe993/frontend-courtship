@@ -1,22 +1,47 @@
 import { Box, Button } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
+import { BACKEND_URL } from "../constants";
 
-const WalletTopUpForm = ({ walletBalance }) => {
+const WalletTopUpForm = (props) => {
+  const { walletBalance, setUserDetails, setAlertMessage, setSnackBarOpen } =
+    props;
   // react-hook-form methods
   const {
     register,
     handleSubmit,
-    getValues,
     reset,
     formState: { errors, isValid },
   } = useForm({ delayError: 300, mode: "onChange" });
 
+  // auth
+  const { user, getAccessTokenSilently } = useAuth0();
+
   // handleSubmit callback fns
-  const onSubmit = (data) => {
+  const onSubmit = async (values) => {
+    console.log(values.wallet);
     //update DB users table wallet col where userId = userId
+    try {
+      const accessToken = await getAccessTokenSilently();
+      const topUp = await axios({
+        method: "PUT",
+        url: `${BACKEND_URL}/users/${user.sub}/wallet`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: { wallet: values.wallet },
+      });
+      setUserDetails(topUp.data);
+      reset();
+      setAlertMessage("Top up successful");
+      setSnackBarOpen(true);
+    } catch (err) {
+      throw new Error(err);
+    }
   };
   const onError = (err) => {
     throw new Error(err);

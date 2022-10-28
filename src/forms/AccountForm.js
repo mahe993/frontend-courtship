@@ -26,11 +26,6 @@ const AccountForm = ({ userDetails }) => {
     throw new Error(err);
   };
 
-  // on successful form submit, reset fields
-  useEffect(() => {
-    reset();
-  }, [isSubmitSuccessful]);
-
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
       <Box display="flex" flexDirection="column" gap={1}>
