@@ -36,7 +36,7 @@ const BookingsPage = () => {
 
   return (
     <Box mt={1}>
-      {userBookings ? (
+      {userBookings && userBookings.length !== 0 ? (
         <Booking bookings={userBookings} />
       ) : (
         <Box

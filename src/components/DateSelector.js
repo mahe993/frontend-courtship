@@ -23,6 +23,8 @@ const DateSelector = (props) => {
 
   // when min date changes, max date changes
   useEffect(() => {
+    console.log("test2");
+
     setMaxDate(lightFormat(addDays(new Date(minDate), 14), "yyyy-MM-dd"));
   }, [minDate]);
 

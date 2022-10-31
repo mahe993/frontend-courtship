@@ -98,6 +98,10 @@ const AccountPage = () => {
           variant="contained"
           color="error"
           size="small"
+          css={css`
+            font-size: 10px;
+            margin-bottom: 10px;
+          `}
           onClick={() => logout({ returnTo: window.location.origin })}
         >
           Logout

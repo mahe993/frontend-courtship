@@ -60,7 +60,9 @@ const CourtPage = () => {
   // internal clock on mount. sets current hour every second
   useEffect(() => {
     const clock = setInterval(() => {
-      setCurrentHour(getHours(new Date()));
+      if (currentHour !== getHours(new Date())) {
+        setCurrentHour(getHours(new Date()));
+      }
     }, 1000);
     return () => clearInterval(clock);
   }, []);
