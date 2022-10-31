@@ -9,7 +9,7 @@ const Listing = ({ listings }) => {
   const navigate = useNavigate();
   const phoneMediaQuery = useMediaQuery(BREAKPOINT.breakpoints.down("tablet"));
 
-  return listings ? (
+  return listings && listings.length !== 0 ? (
     <Box
       width="100%"
       m="auto"
@@ -23,7 +23,7 @@ const Listing = ({ listings }) => {
           key={listing.id}
           border={1}
           display="flex"
-          gap={2}
+          gap={0.5}
           justifyContent="space-between"
           bgcolor="rgba(0, 0, 0, 0.75)"
           css={css`
@@ -60,7 +60,7 @@ const Listing = ({ listings }) => {
             alignItems="center"
             minWidth="196px"
             width="357px"
-            fontSize={phoneMediaQuery ? 10 : 12}
+            fontSize={phoneMediaQuery ? 9 : 12}
           >
             {listing.address}
           </Box>
@@ -70,7 +70,7 @@ const Listing = ({ listings }) => {
             alignItems="center"
             minWidth="40px"
             width="50px"
-            fontSize={phoneMediaQuery ? 10 : 12}
+            fontSize={phoneMediaQuery ? 8 : 12}
             color="var(--font-color)"
           >
             ${listing.price}/hr
@@ -79,7 +79,7 @@ const Listing = ({ listings }) => {
       ))}
     </Box>
   ) : (
-    <Box display="flex" alignItems="center" justifyContent="center">
+    <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
       There is nothing listed yet!
     </Box>
   );

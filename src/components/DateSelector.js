@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { css } from "@emotion/react";
 
 const DateSelector = (props) => {
-  const { register, watchBookingDate, currentHour, reset } = props;
+  const { register, watchBookingDate, currentHour, reset, status } = props;
 
   const [stringDate, setStringDate] = useState();
   const [minDate, setMinDate] = useState(lightFormat(new Date(), "yyyy-MM-dd"));
@@ -47,6 +47,7 @@ const DateSelector = (props) => {
     <>
       <label htmlFor="bookingDate">Select Date</label>
       <input
+        disabled={status === "Inactive"}
         type="date"
         id="bookingDate"
         {...register}

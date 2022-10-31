@@ -33,6 +33,19 @@ const ListingsPage = () => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        transformResponse: [
+          function (data) {
+            const courts = JSON.parse(data);
+            const activeArr = [];
+            const inactiveArr = [];
+            courts.forEach((court) => {
+              if (court.status === "Active") {
+                activeArr.push(court);
+              } else inactiveArr.push(court);
+            });
+            return { active: activeArr, inactive: inactiveArr };
+          },
+        ],
       });
       setUserCourts(res.data);
     } catch (err) {
@@ -60,18 +73,61 @@ const ListingsPage = () => {
         ) : (
           <AddIcon fontSize="small" color="success" />
         )}
-        <p>New Listing</p>
+        <Box
+          bgcolor="rgba(0, 0, 0, 0.35)"
+          borderRadius="25px"
+          p={0.5}
+          fontWeight="bold"
+        >
+          New Listing
+        </Box>
       </Box>
       {openForm && (
-        <Box>
+        <Box mt={1}>
           <NewListingForm
             setOpenForm={setOpenForm}
             setSnackBarOpen={setSnackBarOpen}
           />
         </Box>
       )}
-      <Box mt={2}>
-        <Listing listings={userCourts} />
+      <Box
+        mt={2}
+        fontSize={10}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        gap={1}
+      >
+        <Box
+          bgcolor="rgba(0, 0, 0, 0.75)"
+          borderRadius="25px"
+          p={0.5}
+          minWidth="min-content"
+          width="min-content"
+          whiteSpace="nowrap"
+          color="darkseagreen"
+          fontWeight="bold"
+        >
+          Active Listings
+        </Box>
+        <Box width="95vw">
+          <Listing listings={userCourts?.active} />
+        </Box>
+        <Box
+          bgcolor="rgba(0, 0, 0, 0.75)"
+          borderRadius="25px"
+          p={0.5}
+          minWidth="min-content"
+          width="min-content"
+          whiteSpace="nowrap"
+          color="darkred"
+          fontWeight="bold"
+        >
+          Inactive Listings
+        </Box>
+        <Box width="95vw">
+          <Listing listings={userCourts?.inactive} />
+        </Box>
       </Box>
       <Snackbar
         open={snackBarOpen}

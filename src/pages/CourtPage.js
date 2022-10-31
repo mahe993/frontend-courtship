@@ -13,6 +13,7 @@ import DateSelector from "../components/DateSelector";
 import { useAuth0 } from "@auth0/auth0-react";
 import WalletErrorDialog from "../components/WalletErrorDialog";
 import { useUserContext } from "../contexts/UserContext";
+import ActiveListingSwitch from "../components/ActiveListingSwitch";
 
 const CourtPage = () => {
   const [court, setCourt] = useState();
@@ -78,6 +79,7 @@ const CourtPage = () => {
     }
     try {
       const accessToken = await getAccessTokenSilently();
+      console.log(accessToken);
       // remove money from account first
       const transaction = await axios({
         method: "PUT",
@@ -195,6 +197,7 @@ const CourtPage = () => {
                 watchBookingDate={watch("bookingDate")}
                 currentHour={currentHour}
                 reset={() => resetField("bookingDate")}
+                status={court.status}
               />
             </Box>
             <Box
@@ -214,7 +217,12 @@ const CourtPage = () => {
                 bookings={bookings}
               />
             </Box>
-            <Box display="flex" flexDirection="column" alignItems="center">
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              gap={0.5}
+            >
               <Button
                 variant="contained"
                 color="success"
@@ -230,6 +238,9 @@ const CourtPage = () => {
               >
                 BOOK
               </Button>
+              {court.userId === user.sub && (
+                <ActiveListingSwitch court={court} setCourt={setCourt} />
+              )}
             </Box>
           </Box>
         </Box>
