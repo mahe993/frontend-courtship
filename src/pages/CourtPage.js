@@ -11,17 +11,21 @@ import { css } from "@emotion/react";
 import TimeSlots from "../components/TimeSlots";
 import DateSelector from "../components/DateSelector";
 import { useAuth0 } from "@auth0/auth0-react";
+import WalletErrorDialog from "../components/WalletErrorDialog";
+import { useUserContext } from "../contexts/UserContext";
 
 const CourtPage = () => {
   const [court, setCourt] = useState();
   const [bookings, setBookings] = useState();
   const [currentHour, setCurrentHour] = useState(getHours(new Date()));
   const [selectedTimeslot, setSelectedTimeslot] = useState();
-  const [error, setError] = useState(false);
+  const [openWalletErrorDialog, setOpenWalletErrorDialog] = useState(false);
 
   //get userId from auth
   const { user, getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
     useAuth0();
+  // get user details setter from user context
+  const { setUserDetails } = useUserContext();
   const { courtId } = useParams();
   const navigate = useNavigate();
   const { register, getValues, watch, resetField } = useForm({
@@ -75,9 +79,20 @@ const CourtPage = () => {
     try {
       const accessToken = await getAccessTokenSilently();
       // remove money from account first
-
+      const transaction = await axios({
+        method: "PUT",
+        url: `${BACKEND_URL}/users/${user.sub}/wallet`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          wallet: -court.price * 2,
+        },
+      });
+      //update userContext with new wallet amount
+      setUserDetails(transaction.data);
       // record booking
-      const req = await axios({
+      const recordBooking = await axios({
         method: "POST",
         url: `${BACKEND_URL}/bookings`,
         headers: {
@@ -93,129 +108,136 @@ const CourtPage = () => {
           date: getValues("bookingDate"),
         },
       });
-      navigate("/bookings/success", { state: { bookingId: req.data.id } });
+      navigate("/bookings/success", {
+        state: { bookingId: recordBooking.data.id },
+      });
     } catch (err) {
-      // break the app intentionally to force a user side app refresh
-      setError(true);
-      throw new Error(err);
+      // only possible error is wallet not enough money
+      setOpenWalletErrorDialog(true);
     }
   };
 
   return (
     court && (
-      <Box
-        width="96%"
-        m="auto"
-        mt={1}
-        flexWrap="wrap"
-        display="flex"
-        justifyContent="center"
-        bgcolor="rgba(0, 0, 0, 0.5)"
-        borderRadius="25px"
-      >
+      <>
         <Box
-          width="50%"
-          minWidth="336px"
-          height="85vh"
+          width="96%"
+          m="auto"
+          mt={1}
+          flexWrap="wrap"
           display="flex"
-          flexDirection="column"
           justifyContent="center"
-          alignItems="center"
-          gap={1}
-          className="left-box"
+          bgcolor="rgba(0, 0, 0, 0.5)"
+          borderRadius="25px"
         >
           <Box
-            minWidth="90%"
-            minHeight="70%"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            className="img-container"
-            width="90%"
-            mb={1}
-          >
-            {court.pictureUrl ? (
-              <PictureCarousel pictures={court.pictureUrl} />
-            ) : (
-              "No pictures available"
-            )}
-          </Box>
-          <Box fontSize={12}>{court.courtName}</Box>
-          <Box fontSize={10}>{court.address}</Box>
-          <Box fontSize={12}>${court.price}/hr</Box>
-        </Box>
-        <Box
-          width="50%"
-          minWidth="336px"
-          height="85vh"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          gap={2}
-          className="right-box"
-        >
-          <Box fontStyle="italic" whiteSpace={"pre-line"} p={1.5} fontSize={12}>
-            {court.description}
-          </Box>
-          <Box
-            maxWidth="100%"
+            width="50%"
+            minWidth="336px"
+            height="85vh"
             display="flex"
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            fontSize={12}
+            gap={1}
+            className="left-box"
           >
-            <DateSelector
-              register={register("bookingDate", {
-                required: "This field is required",
-              })}
-              watchBookingDate={watch("bookingDate")}
-              currentHour={currentHour}
-              reset={() => resetField("bookingDate")}
-            />
-          </Box>
-          <Box
-            maxWidth="100%"
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            fontSize={12}
-            gap={0.5}
-          >
-            <Box>Select Timeslot</Box>
-            <TimeSlots
-              currentHour={currentHour}
-              setSelectedTimeslot={setSelectedTimeslot}
-              selectedTimeslot={selectedTimeslot}
-              bookingDate={getValues("bookingDate")}
-              bookings={bookings}
-            />
-          </Box>
-          <Box display="flex" flexDirection="column" alignItems="center">
-            {error && (
-              <Box color="red" fontSize={6} fontStyle="italic">
-                Please select a valid date and time for your booking!
-              </Box>
-            )}
-            <Button
-              variant="contained"
-              color="success"
-              size="small"
-              fullWidth={false}
-              disabled={!getValues("bookingDate") || !selectedTimeslot || error}
-              css={css`
-                :disabled {
-                  color: darkgrey;
-                }
-              `}
-              onClick={handleBook}
+            <Box
+              minWidth="90%"
+              minHeight="70%"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              className="img-container"
+              width="90%"
+              mb={1}
             >
-              BOOK
-            </Button>
+              {court.pictureUrl ? (
+                <PictureCarousel pictures={court.pictureUrl} />
+              ) : (
+                "No pictures available"
+              )}
+            </Box>
+            <Box fontSize={12}>{court.courtName}</Box>
+            <Box fontSize={10}>{court.address}</Box>
+            <Box fontSize={12}>${court.price}/hr</Box>
+          </Box>
+          <Box
+            width="50%"
+            minWidth="336px"
+            height="85vh"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            className="right-box"
+          >
+            <Box
+              fontStyle="italic"
+              whiteSpace={"pre-line"}
+              p={1.5}
+              fontSize={12}
+            >
+              {court.description}
+            </Box>
+            <Box
+              maxWidth="100%"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              fontSize={12}
+            >
+              <DateSelector
+                register={register("bookingDate", {
+                  required: "This field is required",
+                })}
+                watchBookingDate={watch("bookingDate")}
+                currentHour={currentHour}
+                reset={() => resetField("bookingDate")}
+              />
+            </Box>
+            <Box
+              maxWidth="100%"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              fontSize={12}
+              gap={0.5}
+            >
+              <Box>Select Timeslot</Box>
+              <TimeSlots
+                currentHour={currentHour}
+                setSelectedTimeslot={setSelectedTimeslot}
+                selectedTimeslot={selectedTimeslot}
+                bookingDate={getValues("bookingDate")}
+                bookings={bookings}
+              />
+            </Box>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                fullWidth={false}
+                disabled={!getValues("bookingDate") || !selectedTimeslot}
+                css={css`
+                  :disabled {
+                    color: darkgrey;
+                  }
+                `}
+                onClick={handleBook}
+              >
+                BOOK
+              </Button>
+            </Box>
           </Box>
         </Box>
-      </Box>
+        <WalletErrorDialog
+          openWalletErrorDialog={openWalletErrorDialog}
+          setOpenWalletErrorDialog={setOpenWalletErrorDialog}
+        />
+      </>
     )
   );
 };
