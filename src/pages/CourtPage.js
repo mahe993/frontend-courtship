@@ -215,6 +215,7 @@ const CourtPage = () => {
                 selectedTimeslot={selectedTimeslot}
                 bookingDate={getValues("bookingDate")}
                 bookings={bookings}
+                status={court.status}
               />
             </Box>
             <Box
@@ -228,7 +229,11 @@ const CourtPage = () => {
                 color="success"
                 size="small"
                 fullWidth={false}
-                disabled={!getValues("bookingDate") || !selectedTimeslot}
+                disabled={
+                  !getValues("bookingDate") ||
+                  !selectedTimeslot ||
+                  court.status === "Inactive"
+                }
                 css={css`
                   :disabled {
                     color: darkgrey;

@@ -13,6 +13,7 @@ const TimeSlots = (props) => {
     bookingDate,
     bookings,
     currentHour,
+    status,
   } = props;
 
   const [minTimeslot, setMinTimeslot] = useState(0);
@@ -56,7 +57,8 @@ const TimeSlots = (props) => {
                 (slot.value <= minTimeslot &&
                   bookingDate === lightFormat(new Date(), "yyyy-MM-dd")) ||
                 !bookingDate ||
-                checkPreviousBookings()
+                checkPreviousBookings() ||
+                status === "Inactive"
               }
               css={css`
                 min-width: 100px;
@@ -98,7 +100,8 @@ const TimeSlots = (props) => {
                 (slot.value <= minTimeslot &&
                   bookingDate === lightFormat(new Date(), "yyyy-MM-dd")) ||
                 !bookingDate ||
-                checkPreviousBookings()
+                checkPreviousBookings() ||
+                status === "Inactive"
               }
               css={css`
                 min-width: 100px;
