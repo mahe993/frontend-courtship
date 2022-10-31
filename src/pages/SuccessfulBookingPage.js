@@ -31,7 +31,7 @@ const SuccessfulBookingPage = () => {
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       });
       const res = await axios({
-        url: `${BACKEND_URL}/bookings/success/${state.bookingId}`,
+        url: `${BACKEND_URL}/bookings/${state.bookingId}`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
