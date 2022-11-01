@@ -1,11 +1,13 @@
 import { createTheme } from "@mui/material";
-import axios from "axios";
 
 /* eslint-disable default-case */
 const backendURL = (devEnv) => {
   switch (devEnv) {
     case "development":
       return process.env.REACT_APP_DEVELOPMENT_BACKEND_URL;
+
+    case "production":
+      return process.env.REACT_APP_PRODUCTION_BACKEND_URL;
   }
 };
 
@@ -57,24 +59,3 @@ export const returnFileSize = (number) => {
     return `${(number / 1048576).toFixed(1)} MB`;
   }
 };
-
-export const formAxios = axios.create({
-  transformRequest: [
-    function (data, headers) {
-      const form = new FormData();
-      for (const key in data) {
-        const value = data[key];
-        if (Array.isArray(value)) {
-          const arrayKey = `pictures[]`;
-          value.forEach((v) => {
-            form.append(arrayKey, v);
-          });
-        } else {
-          form.append(key, value);
-        }
-      }
-      return form;
-    },
-  ],
-  headers: { "Content-Type": "multipart/form-data" },
-});

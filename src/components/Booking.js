@@ -87,7 +87,7 @@ const Booking = ({ bookings, setBookingsUpdated, bookingsUpdated }) => {
           border-color: darkgreen;
           --font-color: red;
           --upcoming-color: red;
-          --completed-color: green;
+          --completed-color: darkseagreen;
         }
       `}
       onClick={() => {
@@ -116,41 +116,39 @@ const Booking = ({ bookings, setBookingsUpdated, bookingsUpdated }) => {
         </Box>
       )}
       <Box
-        component="p"
         display="flex"
         alignItems="center"
-        minWidth="110px"
+        justifyContent="center"
+        minWidth="100px"
         width="140px"
-        fontSize={phoneMediaQuery ? 10 : 12}
+        fontSize={phoneMediaQuery ? 9 : 12}
       >
         Date: {new Date(booking.date).toString().slice(0, 16)}
       </Box>
-      {!phoneMediaQuery && (
-        <Box
-          fontStyle="italic"
-          component="p"
-          display="flex"
-          alignItems="center"
-          minWidth="10%"
-          fontSize={12}
-          color={
-            booking.status === "Upcoming"
-              ? "var(--upcoming-color)"
-              : "var(--completed-color)"
-          }
-        >
-          {booking.status}
-        </Box>
-      )}
       <Box
-        component="p"
+        fontStyle="italic"
         display="flex"
         alignItems="center"
+        minWidth="min-content"
+        fontSize={phoneMediaQuery ? 8 : 12}
+        color={
+          booking.status === "Upcoming"
+            ? "var(--upcoming-color)"
+            : "var(--completed-color)"
+        }
+      >
+        {booking.status}
+      </Box>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
         minWidth="60px"
-        width="70px"
-        fontSize={phoneMediaQuery ? 10 : 12}
+        width="min-content"
+        whiteSpace="nowrap"
+        mr={0.5}
+        fontSize={phoneMediaQuery ? 9 : 12}
         color="var(--font-color)"
-        pr={0.5}
       >
         Time: {booking.timeslot}:00
       </Box>
