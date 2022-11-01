@@ -243,7 +243,7 @@ const CourtPage = () => {
               >
                 BOOK
               </Button>
-              {court.userId === user.sub && (
+              {court.userId === user?.sub && (
                 <ActiveListingSwitch court={court} setCourt={setCourt} />
               )}
             </Box>
