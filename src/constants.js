@@ -7,7 +7,7 @@ const backendURL = (devEnv) => {
       return process.env.REACT_APP_DEVELOPMENT_BACKEND_URL;
 
     case "production":
-      return process.env.REACT_APP_PRODUCTION_BACKEND_URL; //test deployment
+      return process.env.REACT_APP_PRODUCTION_BACKEND_URL; //test
   }
 };
 
