@@ -29,7 +29,7 @@ code {
     monospace;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 800px) {
   body {
     background-image: url(./assets/images/tennis\ phone\ 1.jpg);
     background-repeat: no-repeat;

@@ -5,9 +5,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import QRlogo from "../assets/images/QRcode.png";
 import { BACKEND_URL } from "../constants";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import CourtReviewForm from "../forms/CourtReviewForm";
 
 const SuccessfulBookingPage = () => {
   const [newestBooking, setNewestBooking] = useState();
+  const [openForm, setOpenForm] = useState();
 
   const navigate = useNavigate();
   const { getAccessTokenSilently } = useAuth0();
@@ -54,10 +60,10 @@ const SuccessfulBookingPage = () => {
       p={1}
       m="auto"
     >
-      <Box>Booking Successful!</Box>
+      <Box fontSize={30}>Booking Successful!</Box>
       {newestBooking && (
         <Box
-          width="60%"
+          width="90vmin"
           minWidth="min-content"
           bgcolor="white"
           display="flex"
@@ -75,36 +81,40 @@ const SuccessfulBookingPage = () => {
             <Box
               display="flex"
               flexDirection="column"
-              fontSize={10}
+              fontSize={16}
               color="inherit"
               gap={0.5}
               mr="auto"
             >
-              <Box display="flex">
-                <Box minWidth="70px">Booking ID:</Box>
-                <Box>{newestBooking.bookingNumber}</Box>
+              <Box display="flex" gap={0.5}>
+                <Box minWidth="90px">Booking ID:</Box>
+                <Box fontSize={14} display="flex" alignItems="center">
+                  {newestBooking.bookingNumber}
+                </Box>
               </Box>
-              <Box display="flex">
-                <Box minWidth="70px">Date:</Box>
-                <Box>
+              <Box display="flex" gap={0.5}>
+                <Box minWidth="90px">Date:</Box>
+                <Box fontSize={14} display="flex" alignItems="center">
                   {new Date(newestBooking.date).toString().slice(0, 16)}
                 </Box>
               </Box>
-              <Box display="flex">
-                <Box minWidth="70px">Timeslot:</Box>
-                <Box>
+              <Box display="flex" gap={0.5}>
+                <Box minWidth="90px">Timeslot:</Box>
+                <Box fontSize={14} display="flex" alignItems="center">
                   {newestBooking.timeslot}:00 to {newestBooking.timeslot + 2}:00
                 </Box>
               </Box>
-              <Box display="flex">
-                <Box minWidth="70px">Address:</Box>
-                <Box>{newestBooking.address}</Box>
+              <Box display="flex" gap={0.5}>
+                <Box minWidth="90px">Address:</Box>
+                <Box fontSize={14} display="flex" alignItems="center">
+                  {newestBooking.address}
+                </Box>
               </Box>
-              <Box fontSize={6} fontStyle="italic" fontWeight="bold">
+              <Box fontSize={12} fontStyle="italic" fontWeight="bold">
                 *Please show this ticket upon arrival/request!
               </Box>
             </Box>
-            <img src={QRlogo} alt="qrcode" width="50px" heigh="50px" />
+            <img src={QRlogo} alt="qrcode" width="100px" heigh="100px" />
           </Box>
         </Box>
       )}
@@ -116,6 +126,39 @@ const SuccessfulBookingPage = () => {
       >
         View all bookings
       </Button>
+      {true ? (
+        <Box
+          display="flex"
+          justifyContent="flex-start"
+          alignItems="center"
+          fontSize={14}
+          css={css`
+            cursor: pointer;
+          `}
+          onClick={() => setOpenForm(!openForm)}
+        >
+          {openForm ? (
+            <RemoveIcon color="error" />
+          ) : (
+            <AddIcon color="success" />
+          )}
+          <Box
+            bgcolor="rgba(0, 0, 0, 0.35)"
+            borderRadius="25px"
+            p={1}
+            fontWeight="bold"
+          >
+            Review Court
+          </Box>
+        </Box>
+      ) : (
+        "review"
+      )}
+      {openForm && (
+        <Box mt={1}>
+          <CourtReviewForm setOpenForm={setOpenForm} />
+        </Box>
+      )}
     </Box>
   );
 };

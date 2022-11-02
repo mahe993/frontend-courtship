@@ -21,15 +21,15 @@ const TabletNavBar = ({ isAuthenticated, avatarUrl }) => {
       height={"10vh"}
       bgcolor={theme.palette.success.dark}
       display="flex"
-      fontSize={10}
+      fontSize={14}
       justifyContent="space-between"
     >
       <Box display="flex" gap={1} maxWidth="33%" height="inherit">
-        <Box display="flex" alignItems="center" ml={1}>
+        <Box display="flex" alignItems="center" ml={2}>
           <Avatar
             src={avatarUrl}
-            sx={{ width: 30, height: 30 }}
-            alt="username"
+            sx={{ width: 60, height: 60 }}
+            alt="profilepic"
           />
         </Box>
         <Box display="flex" alignItems="center">
@@ -62,7 +62,7 @@ const TabletNavBar = ({ isAuthenticated, avatarUrl }) => {
         display="flex"
         gap={3}
         alignItems="center"
-        maxWidth="50%"
+        maxWidth="65%"
         left="50%"
         position="absolute"
         height="inherit"
@@ -80,14 +80,15 @@ const TabletNavBar = ({ isAuthenticated, avatarUrl }) => {
             onClick={() => navigate(item.path)}
             fontSize="inherit"
             css={css`
-              min-width: 65px;
+              min-width: min-content;
+              white-space: nowrap;
             `}
           >
             {item.name}
           </Link>
         ))}
       </Box>
-      <Box display="flex" alignItems="center" mr={1}>
+      <Box display="flex" alignItems="center" mr={3}>
         <BrandLogo />
       </Box>
     </Box>

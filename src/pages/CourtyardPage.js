@@ -17,7 +17,7 @@ const CourtyardPage = () => {
   };
 
   return (
-    <Box mt={1}>
+    <Box mt={1} width="95vw" mr="auto" ml="auto">
       <Listing listings={allCourts} />
     </Box>
   );

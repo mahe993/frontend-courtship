@@ -7,7 +7,7 @@ const backendURL = (devEnv) => {
       return process.env.REACT_APP_DEVELOPMENT_BACKEND_URL;
 
     case "production":
-      return process.env.REACT_APP_PRODUCTION_BACKEND_URL; //test
+      return process.env.REACT_APP_PRODUCTION_BACKEND_URL;
   }
 };
 
@@ -17,7 +17,7 @@ export const BREAKPOINT = createTheme({
   breakpoints: {
     values: {
       mobile: 0,
-      tablet: 700,
+      tablet: 800,
       laptop: 1024,
       desktop: 1200,
     },
