@@ -4,9 +4,9 @@ import React from "react";
 const Manifesto = () => {
   return (
     <>
-      <h2>Welcome to Courtship™</h2>
+      <h1>Welcome to Courtship™</h1>
       <br />
-      <Box width="90%" m="auto" fontSize={10}>
+      <Box width="90%" m="auto" fontSize={14}>
         <Box component="p" fontWeight="bold">
           Tennis lovers' space!
         </Box>

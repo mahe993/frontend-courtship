@@ -35,12 +35,16 @@ const Listing = ({ listings }) => {
           `}
           onClick={() => navigate(`/courtyard/court${listing.id}`)}
         >
-          <Box width={"90px"} height={"60px"} minWidth="90px">
+          <Box
+            width={phoneMediaQuery ? "90px" : "120px"}
+            height={phoneMediaQuery ? "60px" : "80px"}
+            minWidth={phoneMediaQuery ? "90px" : "120px"}
+          >
             <img
               src={listing.pictureUrl ? listing.pictureUrl[0].downloadUrl : ""}
               alt="no pictures"
-              width="90px"
-              height="60px"
+              width={phoneMediaQuery ? "90px" : "120px"}
+              height={phoneMediaQuery ? "60px" : "80px"}
             />
           </Box>
           {!phoneMediaQuery && (
@@ -49,7 +53,7 @@ const Listing = ({ listings }) => {
               display="flex"
               alignItems="center"
               minWidth="10%"
-              fontSize={12}
+              fontSize={phoneMediaQuery ? 12 : 14}
             >
               {listing.courtName}
             </Box>
@@ -59,8 +63,8 @@ const Listing = ({ listings }) => {
             display="flex"
             alignItems="center"
             minWidth="196px"
-            width="357px"
-            fontSize={phoneMediaQuery ? 9 : 12}
+            width="550px"
+            fontSize={phoneMediaQuery ? 9 : 14}
           >
             {listing.address}
           </Box>
@@ -70,8 +74,9 @@ const Listing = ({ listings }) => {
             alignItems="center"
             minWidth="40px"
             width="50px"
-            fontSize={phoneMediaQuery ? 8 : 12}
+            fontSize={phoneMediaQuery ? 8 : 14}
             color="var(--font-color)"
+            mr={!phoneMediaQuery && 2}
           >
             ${listing.price}/hr
           </Box>
@@ -79,7 +84,13 @@ const Listing = ({ listings }) => {
       ))}
     </Box>
   ) : (
-    <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      mb={2}
+      fontWeight="bold"
+    >
       There is nothing listed yet!
     </Box>
   );

@@ -159,9 +159,9 @@ const CourtPage = () => {
                 "No pictures available"
               )}
             </Box>
-            <Box fontSize={12}>{court.courtName}</Box>
-            <Box fontSize={10}>{court.address}</Box>
-            <Box fontSize={12}>${court.price}/hr</Box>
+            <Box fontSize={14}>{court.courtName}</Box>
+            <Box fontSize={12}>{court.address}</Box>
+            <Box fontSize={14}>${court.price}/hr</Box>
           </Box>
           <Box
             width="50%"
@@ -177,8 +177,9 @@ const CourtPage = () => {
             <Box
               fontStyle="italic"
               whiteSpace={"pre-line"}
-              p={1.5}
-              fontSize={12}
+              p={1}
+              fontSize={15}
+              maxWidth="40vw"
             >
               {court.description}
             </Box>
@@ -188,7 +189,6 @@ const CourtPage = () => {
               flexDirection="column"
               justifyContent="center"
               alignItems="center"
-              fontSize={12}
             >
               <DateSelector
                 register={register("bookingDate", {
@@ -205,7 +205,7 @@ const CourtPage = () => {
               display="flex"
               flexDirection="column"
               alignItems="center"
-              fontSize={12}
+              fontSize={15}
               gap={0.5}
             >
               <Box>Select Timeslot</Box>

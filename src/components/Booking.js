@@ -96,12 +96,16 @@ const Booking = ({ bookings, setBookingsUpdated, bookingsUpdated }) => {
         });
       }}
     >
-      <Box width={"90px"} height={"60px"} minWidth="90px">
+      <Box
+        width={phoneMediaQuery ? "90px" : "120px"}
+        height={phoneMediaQuery ? "60px" : "80px"}
+        minWidth={phoneMediaQuery ? "90px" : "120px"}
+      >
         <img
           src={booking.pictureUrl ? booking.pictureUrl[0].downloadUrl : ""}
           alt="no pictures"
-          width="90px"
-          height="60px"
+          width={phoneMediaQuery ? "90px" : "120px"}
+          height={phoneMediaQuery ? "60px" : "80px"}
         />
       </Box>
       {!phoneMediaQuery && (
@@ -110,7 +114,7 @@ const Booking = ({ bookings, setBookingsUpdated, bookingsUpdated }) => {
           display="flex"
           alignItems="center"
           minWidth="10%"
-          fontSize={12}
+          fontSize={14}
         >
           ID: {booking.bookingNumber}
         </Box>
@@ -120,8 +124,8 @@ const Booking = ({ bookings, setBookingsUpdated, bookingsUpdated }) => {
         alignItems="center"
         justifyContent="center"
         minWidth="100px"
-        width="140px"
-        fontSize={phoneMediaQuery ? 9 : 12}
+        width="150px"
+        fontSize={phoneMediaQuery ? 9 : 14}
       >
         Date: {new Date(booking.date).toString().slice(0, 16)}
       </Box>
@@ -130,7 +134,7 @@ const Booking = ({ bookings, setBookingsUpdated, bookingsUpdated }) => {
         display="flex"
         alignItems="center"
         minWidth="min-content"
-        fontSize={phoneMediaQuery ? 8 : 12}
+        fontSize={phoneMediaQuery ? 8 : 14}
         color={
           booking.status === "Upcoming"
             ? "var(--upcoming-color)"
@@ -146,8 +150,8 @@ const Booking = ({ bookings, setBookingsUpdated, bookingsUpdated }) => {
         minWidth="60px"
         width="min-content"
         whiteSpace="nowrap"
-        mr={0.5}
-        fontSize={phoneMediaQuery ? 9 : 12}
+        mr={1}
+        fontSize={phoneMediaQuery ? 9 : 14}
         color="var(--font-color)"
       >
         Time: {booking.timeslot}:00

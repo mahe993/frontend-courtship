@@ -70,7 +70,7 @@ const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               justify-content: end;
-              font-size: 10px;
+              font-size: 12px;
               font-weight: bold;
               height: 23.5px;
             `}
@@ -94,10 +94,10 @@ const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
             })}
             css={css`
               padding: 3px;
-              font-size: 10px;
+              font-size: 12px;
               min-width: 20%;
               ::placeholder {
-                font-size: 10px;
+                font-size: 12px;
                 font-style: italic;
               }
             `}
@@ -132,7 +132,7 @@ const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               justify-content: end;
-              font-size: 10px;
+              font-size: 12px;
               font-weight: bold;
               height: 23.5px;
             `}
@@ -161,10 +161,10 @@ const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
             })}
             css={css`
               padding: 3px;
-              font-size: 10px;
+              font-size: 12px;
               min-width: 20%;
               ::placeholder {
-                font-size: 10px;
+                font-size: 12px;
                 font-style: italic;
               }
             `}
@@ -198,7 +198,7 @@ const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               justify-content: end;
-              font-size: 10px;
+              font-size: 12px;
               font-weight: bold;
               height: 23.5px;
             `}
@@ -208,7 +208,7 @@ const AccountForm = ({ setAlertMessage, setSnackBarOpen }) => {
           <Box
             css={css`
               padding: 3px;
-              font-size: 10px;
+              font-size: 12px;
               min-width: 140px;
               width: 20%;
             `}

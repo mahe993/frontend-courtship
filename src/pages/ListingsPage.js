@@ -55,24 +55,20 @@ const ListingsPage = () => {
 
   return (
     <>
-      <Box component="h2" m="auto" width="max-content" mt={1}>
+      <Box component="h1" m="auto" width="max-content" mt={1}>
         List Your Court
       </Box>
       <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
-        fontSize={10}
+        fontSize={14}
         css={css`
           cursor: pointer;
         `}
         onClick={() => setOpenForm(!openForm)}
       >
-        {openForm ? (
-          <RemoveIcon fontSize="small" color="error" />
-        ) : (
-          <AddIcon fontSize="small" color="success" />
-        )}
+        {openForm ? <RemoveIcon color="error" /> : <AddIcon color="success" />}
         <Box
           bgcolor="rgba(0, 0, 0, 0.35)"
           borderRadius="25px"
@@ -92,7 +88,7 @@ const ListingsPage = () => {
       )}
       <Box
         mt={2}
-        fontSize={10}
+        fontSize={14}
         display="flex"
         flexDirection="column"
         alignItems="center"

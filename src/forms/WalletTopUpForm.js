@@ -57,7 +57,9 @@ const WalletTopUpForm = ({ setAlertMessage, setSnackBarOpen }) => {
         justifyContent="center"
         gap={1}
       >
-        <Box fontWeight="bold ">Wallet</Box>
+        <Box fontWeight="bold" fontSize={18}>
+          Wallet
+        </Box>
         <Box
           display="flex"
           gap={1}
@@ -73,7 +75,7 @@ const WalletTopUpForm = ({ setAlertMessage, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               justify-content: end;
-              font-size: 10px;
+              font-size: 12px;
               height: 23.5px;
             `}
           >
@@ -86,7 +88,7 @@ const WalletTopUpForm = ({ setAlertMessage, setSnackBarOpen }) => {
               width: 20%;
               min-width: 143px;
               justify-content: center;
-              font-size: 10px;
+              font-size: 12px;
               height: 23.5px;
             `}
           >
@@ -110,7 +112,7 @@ const WalletTopUpForm = ({ setAlertMessage, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               justify-content: end;
-              font-size: 10px;
+              font-size: 12px;
               height: 23.5px;
             `}
           >
@@ -129,11 +131,11 @@ const WalletTopUpForm = ({ setAlertMessage, setSnackBarOpen }) => {
             })}
             css={css`
               padding: 3px;
-              font-size: 10px;
+              font-size: 12px;
               min-width: 20%;
               text-align: center;
               ::placeholder {
-                font-size: 10px;
+                font-size: 12px;
                 font-style: italic;
               }
             `}

@@ -13,7 +13,10 @@ const BrandLogo = () => {
   return (
     <>
       <Box>
-        <SportsTennisIcon fontSize="large" />
+        <SportsTennisIcon
+          fontSize="large"
+          sx={!phoneMediaQuery && { width: "50px", height: "50px" }}
+        />
       </Box>
       <Box
         bgcolor={"purple"}

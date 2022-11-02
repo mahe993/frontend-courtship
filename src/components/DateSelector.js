@@ -45,7 +45,14 @@ const DateSelector = (props) => {
 
   return (
     <>
-      <label htmlFor="bookingDate">Select Date</label>
+      <label
+        htmlFor="bookingDate"
+        css={css`
+          font-size: 15px;
+        `}
+      >
+        Select Date
+      </label>
       <input
         disabled={status === "Inactive"}
         type="date"
@@ -60,7 +67,7 @@ const DateSelector = (props) => {
       {stringDate && (
         <Box
           color={stringDate.includes("Invalid") ? "red" : "inherit"}
-          fontSize={stringDate.includes("Invalid") ? 8 : 12}
+          fontSize={stringDate.includes("Invalid") ? 10 : 14}
           fontStyle={stringDate.includes("Invalid") && "italic"}
         >
           {stringDate}

@@ -3,7 +3,7 @@ import React from "react";
 
 const CourtshipRules = () => {
   return (
-    <Box width="90%" m="auto" fontSize={10}>
+    <Box width="90%" m="auto" fontSize={14}>
       <Box component="p" fontWeight="bold">
         How it works! <em>(and some rules)</em>
       </Box>

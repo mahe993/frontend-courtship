@@ -139,7 +139,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               text-align: end;
-              font-size: 10px;
+              font-size: 12px;
             `}
           >
             Name:
@@ -154,10 +154,10 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
             })}
             css={css`
               padding: 3px;
-              font-size: 10px;
+              font-size: 12px;
               min-width: 75%;
               ::placeholder {
-                font-size: 10px;
+                font-size: 12px;
                 font-style: italic;
               }
             `}
@@ -165,11 +165,11 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
         </Box>
         {errors.courtName && (
           <Box
-            fontSize={7}
+            fontSize={10}
             color="red"
             mt={-1}
             width="60vw"
-            pl="14.5vw"
+            pl="16.5vw"
             textAlign="start"
           >
             {errors.courtName.message}
@@ -189,7 +189,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               text-align: end;
-              font-size: 10px;
+              font-size: 12px;
             `}
           >
             Address:
@@ -201,11 +201,11 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
             placeholder="Teban Gardens BLK 150 #01-123 S123456"
             {...register("address", { required: "This field is required!" })}
             css={css`
-              font-size: 10px;
+              font-size: 12px;
               min-width: 75%;
               padding: 3px;
               ::placeholder {
-                font-size: 10px;
+                font-size: 12px;
                 font-style: italic;
               }
             `}
@@ -213,11 +213,11 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
         </Box>
         {errors.address && (
           <Box
-            fontSize={7}
+            fontSize={10}
             color="red"
             mt={-1}
             width="60vw"
-            pl="14.5vw"
+            pl="16.5vw"
             textAlign="start"
           >
             {errors.address.message}
@@ -237,7 +237,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               text-align: end;
-              font-size: 10px;
+              font-size: 12px;
             `}
           >
             Description:
@@ -253,10 +253,10 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
             css={css`
               padding: 3px;
               resize: none;
-              font-size: 10px;
+              font-size: 12px;
               min-width: 75%;
               ::placeholder {
-                font-size: 10px;
+                font-size: 12px;
                 font-style: italic;
               }
             `}
@@ -264,11 +264,11 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
         </Box>
         {errors.description && (
           <Box
-            fontSize={7}
+            fontSize={10}
             color="red"
             mt={-1}
             width="60vw"
-            pl="14.5vw"
+            pl="16.5vw"
             textAlign="start"
           >
             {errors.description.message}
@@ -288,7 +288,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
               width: 10%;
               min-width: 60px;
               text-align: end;
-              font-size: 10px;
+              font-size: 12px;
             `}
           >
             Price ($):
@@ -310,18 +310,24 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
               },
             })}
             css={css`
-              font-size: 10px;
+              font-size: 12px;
               min-width: 75%;
               padding: 3px;
               ::placeholder {
-                font-size: 10px;
+                font-size: 12px;
                 font-style: italic;
               }
             `}
           />
         </Box>
         {errors.price && (
-          <Box fontSize={7} color="red" mt={-1} width="60vw" textAlign="center">
+          <Box
+            fontSize={10}
+            color="red"
+            mt={-1}
+            width="60vw"
+            textAlign="center"
+          >
             {errors.price.message}
           </Box>
         )}
@@ -329,7 +335,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
           <label
             htmlFor="courtPictures"
             css={css`
-              font-size: 10px;
+              font-size: 12px;
               cursor: pointer;
             `}
           >
@@ -342,7 +348,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
               {...register("courtPictures")}
               css={css`
                 display: none;
-                font-size: 10px;
+                font-size: 12px;
               `}
               disabled={displayPictureFiles.length === 5}
             />
