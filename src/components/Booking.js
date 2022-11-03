@@ -92,7 +92,7 @@ const Booking = ({ bookings, setBookingsUpdated, bookingsUpdated }) => {
       `}
       onClick={() => {
         navigate("/bookings/success", {
-          state: { bookingId: booking.id },
+          state: { booking: booking },
         });
       }}
     >

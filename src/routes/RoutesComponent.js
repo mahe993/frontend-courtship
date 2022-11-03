@@ -7,7 +7,6 @@ import CourtyardPage from "../pages/CourtyardPage";
 import CourtPage from "../pages/CourtPage";
 import BookingsPage from "../pages/BookingsPage";
 import AccountPage from "../pages/AccountPage";
-import TestPage from "../pages/TestPage";
 import SuccessfulBookingPage from "../pages/SuccessfulBookingPage";
 import ProtectedRoute from "../routes/ProtectedRoute";
 
@@ -39,8 +38,6 @@ const RoutesComponent = () => {
           </main>
         }
       />
-
-      <Route path="/test" element=<TestPage /> />
     </Routes>
   );
 };

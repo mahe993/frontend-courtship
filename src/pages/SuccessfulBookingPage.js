@@ -10,9 +10,11 @@ import RemoveIcon from "@mui/icons-material/Remove";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import CourtReviewForm from "../forms/CourtReviewForm";
+import Review from "../components/Review";
 
 const SuccessfulBookingPage = () => {
   const [newestBooking, setNewestBooking] = useState();
+  const [review, setReview] = useState();
   const [openForm, setOpenForm] = useState();
 
   const navigate = useNavigate();
@@ -23,12 +25,15 @@ const SuccessfulBookingPage = () => {
 
   //get the booking from bookingId
   useEffect(() => {
-    if (state?.bookingId === undefined) {
+    if (state?.booking?.id === undefined) {
       //redirect user away here
       navigate("/bookings");
-    } else if (state.bookingId) {
+    } else if (state?.booking?.id) {
       getBooking();
       //check if booking status === completed, getReview
+      if (state.booking.status === "Completed") {
+        getReview();
+      }
     }
   }, []);
 
@@ -37,13 +42,29 @@ const SuccessfulBookingPage = () => {
       const accessToken = await getAccessTokenSilently({
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       });
-      const res = await axios({
-        url: `${BACKEND_URL}/bookings/${state.bookingId}`,
+      const booking = await axios({
+        url: `${BACKEND_URL}/bookings/${state.booking.id}`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      setNewestBooking(res.data);
+      setNewestBooking(booking.data);
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
+
+  const getReview = async () => {
+    try {
+      const accessToken = await getAccessTokenSilently();
+      const review = await axios({
+        url: `${BACKEND_URL}/reviews/bookings/${state.booking.id}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setReview(review.data);
+      console.log(review.data);
     } catch (err) {
       throw new Error(err);
     }
@@ -127,7 +148,7 @@ const SuccessfulBookingPage = () => {
       >
         View all bookings
       </Button>
-      {true ? (
+      {!review ? (
         <Box
           display="flex"
           justifyContent="flex-start"
@@ -153,10 +174,12 @@ const SuccessfulBookingPage = () => {
           </Box>
         </Box>
       ) : (
-        "review"
+        <Box>
+          <Review reviews={[review]} />
+        </Box>
       )}
       {openForm && (
-        <Box mt={0}>
+        <Box>
           <CourtReviewForm setOpenForm={setOpenForm} />
         </Box>
       )}
