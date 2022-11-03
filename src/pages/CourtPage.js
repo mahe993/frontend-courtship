@@ -285,7 +285,25 @@ const CourtPage = () => {
           setOpenWalletErrorDialog={setOpenWalletErrorDialog}
         />
         <Box mb={2} mt={2}>
-          <Review reviews={reviews} />
+          {reviews.length === 0 ? (
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <Box
+                bgcolor="rgba(0, 0, 0, 0.75)"
+                borderRadius="25px"
+                p={1}
+                minWidth="min-content"
+                width="min-content"
+                whiteSpace="nowrap"
+                color="darkseagreen"
+                fontWeight="bold"
+              >
+                REVIEWS
+              </Box>
+              <Box>There are no reviews yet!</Box>
+            </Box>
+          ) : (
+            <Review reviews={reviews} />
+          )}
         </Box>
       </Box>
     )

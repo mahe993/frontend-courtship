@@ -20,7 +20,7 @@ const Review = ({ reviews }) => {
         >
           REVIEWS
         </Box>
-        {reviews.length !== 0 ? (
+        {reviews.length !== 0 &&
           reviews.map((review) => (
             <Box
               key={review.id}
@@ -59,10 +59,7 @@ const Review = ({ reviews }) => {
                 :00
               </Box>
             </Box>
-          ))
-        ) : (
-          <Box>There are no reviews yet!</Box>
-        )}
+          ))}
       </Box>
     )
   );

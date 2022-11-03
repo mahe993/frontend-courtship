@@ -1,5 +1,5 @@
 import { Box, Button, useMediaQuery } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import tennisBall from "../assets/images/tennis ball.png";
