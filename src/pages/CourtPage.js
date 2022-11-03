@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { BACKEND_URL } from "../constants";
-import { Box, Button } from "@mui/material";
+import { BACKEND_URL, createRatingBalls, getAverageRating } from "../constants";
+import { Box, Button, Tooltip } from "@mui/material";
 import PictureCarousel from "../components/PictureCarousel";
 import { useForm } from "react-hook-form";
 import { getHours } from "date-fns";
@@ -14,6 +14,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import WalletErrorDialog from "../components/WalletErrorDialog";
 import { useUserContext } from "../contexts/UserContext";
 import ActiveListingSwitch from "../components/ActiveListingSwitch";
+import Review from "../components/Review";
+import tennisBall from "../assets/images/tennis ball.png";
 
 const CourtPage = () => {
   const [court, setCourt] = useState();
@@ -21,6 +23,8 @@ const CourtPage = () => {
   const [currentHour, setCurrentHour] = useState(getHours(new Date()));
   const [selectedTimeslot, setSelectedTimeslot] = useState();
   const [openWalletErrorDialog, setOpenWalletErrorDialog] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
 
   //get userId from auth
   const { user, getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
@@ -38,6 +42,7 @@ const CourtPage = () => {
   useEffect(() => {
     getCourt();
     getCourtBookings();
+    getCourtReviews();
   }, []);
 
   const getCourt = async () => {
@@ -62,6 +67,18 @@ const CourtPage = () => {
     }
   };
 
+  const getCourtReviews = async () => {
+    try {
+      const res = await axios({
+        url: `${BACKEND_URL}/reviews/courts/${courtId}`,
+      });
+      setReviews(res.data);
+      setAverageRating(getAverageRating(res.data));
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
+
   // internal clock on mount. sets current hour every second
   useEffect(() => {
     const clock = setInterval(() => {
@@ -79,7 +96,6 @@ const CourtPage = () => {
     }
     try {
       const accessToken = await getAccessTokenSilently();
-      console.log(accessToken);
       // remove money from account first
       const transaction = await axios({
         method: "PUT",
@@ -121,7 +137,7 @@ const CourtPage = () => {
 
   return (
     court && (
-      <>
+      <Box display="flex" flexDirection="column" alignItems="center">
         <Box
           width="96%"
           m="auto"
@@ -159,6 +175,21 @@ const CourtPage = () => {
                 "No pictures available"
               )}
             </Box>
+            <Tooltip
+              disableFocusListener
+              title={`average rating: ${averageRating}`}
+              followCursor
+              placement="top"
+            >
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                minWidth="150px"
+              >
+                {createRatingBalls(averageRating, tennisBall)}
+              </Box>
+            </Tooltip>
             <Box fontSize={14}>{court.courtName}</Box>
             <Box fontSize={12}>{court.address}</Box>
             <Box fontSize={14}>${court.price}/hr</Box>
@@ -179,7 +210,7 @@ const CourtPage = () => {
               whiteSpace={"pre-line"}
               p={1}
               fontSize={15}
-              maxWidth="40vw"
+              maxWidth="50vw"
             >
               {court.description}
             </Box>
@@ -253,7 +284,10 @@ const CourtPage = () => {
           openWalletErrorDialog={openWalletErrorDialog}
           setOpenWalletErrorDialog={setOpenWalletErrorDialog}
         />
-      </>
+        <Box mb={2} mt={2}>
+          <Review reviews={reviews} />
+        </Box>
+      </Box>
     )
   );
 };

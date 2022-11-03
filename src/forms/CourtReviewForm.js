@@ -4,19 +4,50 @@ import React, { useEffect } from "react";
 import { css } from "@emotion/react";
 import tennisBall from "../assets/images/tennis ball.png";
 import { useForm } from "react-hook-form";
-import { BREAKPOINT } from "../constants";
+import { BACKEND_URL, BREAKPOINT } from "../constants";
+import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 
-const CourtReviewForm = () => {
+const CourtReviewForm = ({ setOpenForm, setReview, booking }) => {
   const {
     register,
     watch,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm();
+
   const phoneMediaQuery = useMediaQuery(BREAKPOINT.breakpoints.down("tablet"));
 
-  const onSubmit = () => {
-    console.log("update review table, close review form, update review state");
+  const { getAccessTokenSilently, user } = useAuth0();
+
+  const createReview = async () => {
+    try {
+      const accessToken = await getAccessTokenSilently();
+      const review = await axios({
+        method: "POST",
+        url: `${BACKEND_URL}/reviews`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          ratings: getValues("ratings"),
+          experience: getValues("experience"),
+          reviewCode: `${user.sub}-${booking.id}`,
+          userId: user.sub,
+          courtId: booking.courtId,
+          bookingId: booking.id,
+        },
+      });
+      setReview(review.data);
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
+
+  const onSubmit = async () => {
+    await createReview();
+    setOpenForm(false);
   };
 
   const onError = (err) => {
@@ -179,7 +210,7 @@ const CourtReviewForm = () => {
             rows={phoneMediaQuery ? 8 : 5}
             cols={phoneMediaQuery ? 45 : 100}
             placeholder={`Leave a review of the court!\n\nE.g. surface type/condition of the court etc!`}
-            {...register("review")}
+            {...register("experience")}
             css={css`
               padding: 5px;
               resize: none;

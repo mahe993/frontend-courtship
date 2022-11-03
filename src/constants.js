@@ -1,4 +1,6 @@
-import { createTheme } from "@mui/material";
+import { Box, createTheme } from "@mui/material";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 
 /* eslint-disable default-case */
 const backendURL = (devEnv) => {
@@ -58,4 +60,50 @@ export const returnFileSize = (number) => {
   } else if (number >= 1048576) {
     return `${(number / 1048576).toFixed(1)} MB`;
   }
+};
+
+export const createRatingBalls = (rating, imgSource) => {
+  const ratingBalls = [];
+  const ballNumber = Math.ceil(rating);
+  let clipping = "0%";
+  for (let i = 0; i < ballNumber; i++) {
+    if (i === ballNumber - 1) {
+      clipping = `${(ballNumber - rating) * 100}%`;
+    }
+    ratingBalls.push(
+      <Box
+        height={25}
+        width={25}
+        display="flex"
+        key={i}
+        css={css`
+          clip-path: inset(0% ${clipping} 0% 0%);
+        `}
+      >
+        <img
+          src={imgSource}
+          alt="tennis ball"
+          css={css`
+            width: 100%;
+            height: 100%;
+          `}
+        />
+      </Box>
+    );
+  }
+  return ratingBalls;
+};
+
+export const getAverageRating = (reviews) => {
+  if (reviews.length === 0) {
+    return 0;
+  }
+  if (reviews.length === 1) {
+    return reviews[0].ratings;
+  }
+  const sum = reviews.reduce((prev, curr) => {
+    return prev.ratings + curr.ratings;
+  });
+  const average = sum / reviews.length;
+  return average.toFixed(2);
 };

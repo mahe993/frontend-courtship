@@ -14,7 +14,7 @@ import Review from "../components/Review";
 
 const SuccessfulBookingPage = () => {
   const [newestBooking, setNewestBooking] = useState();
-  const [review, setReview] = useState();
+  const [review, setReview] = useState([]);
   const [openForm, setOpenForm] = useState();
 
   const navigate = useNavigate();
@@ -63,8 +63,7 @@ const SuccessfulBookingPage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      setReview(review.data);
-      console.log(review.data);
+      setReview([review.data]);
     } catch (err) {
       throw new Error(err);
     }
@@ -148,39 +147,44 @@ const SuccessfulBookingPage = () => {
       >
         View all bookings
       </Button>
-      {!review ? (
-        <Box
-          display="flex"
-          justifyContent="flex-start"
-          alignItems="center"
-          fontSize={14}
-          css={css`
-            cursor: pointer;
-          `}
-          onClick={() => setOpenForm(!openForm)}
-        >
-          {openForm ? (
-            <RemoveIcon color="error" />
-          ) : (
-            <AddIcon color="success" />
-          )}
+      {newestBooking?.status === "Completed" &&
+        (review.length === 0 || review[0] === null ? (
           <Box
-            bgcolor="rgba(0, 0, 0, 0.35)"
-            borderRadius="25px"
-            p={1}
-            fontWeight="bold"
+            display="flex"
+            justifyContent="flex-start"
+            alignItems="center"
+            fontSize={14}
+            css={css`
+              cursor: pointer;
+            `}
+            onClick={() => setOpenForm(!openForm)}
           >
-            Review Court
+            {openForm ? (
+              <RemoveIcon color="error" />
+            ) : (
+              <AddIcon color="success" />
+            )}
+            <Box
+              bgcolor="rgba(0, 0, 0, 0.35)"
+              borderRadius="25px"
+              p={1}
+              fontWeight="bold"
+            >
+              Review Court
+            </Box>
           </Box>
-        </Box>
-      ) : (
-        <Box>
-          <Review reviews={[review]} />
-        </Box>
-      )}
+        ) : (
+          <Box>
+            <Review reviews={review} />
+          </Box>
+        ))}
       {openForm && (
         <Box>
-          <CourtReviewForm setOpenForm={setOpenForm} />
+          <CourtReviewForm
+            setOpenForm={setOpenForm}
+            setReview={setReview}
+            booking={state?.booking}
+          />
         </Box>
       )}
     </Box>
