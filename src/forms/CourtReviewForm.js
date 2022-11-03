@@ -1,36 +1,56 @@
-import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Button, useMediaQuery } from "@mui/material";
+import React, { useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import tennisBall from "../assets/images/tennis ball.png";
 import { useForm } from "react-hook-form";
+import { BREAKPOINT } from "../constants";
 
 const CourtReviewForm = () => {
-  const { register, watch } = useForm();
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const phoneMediaQuery = useMediaQuery(BREAKPOINT.breakpoints.down("tablet"));
 
-  useEffect(() => {
-    console.log(watch("ratings"));
-  }, [watch("ratings")]);
+  const onSubmit = () => {
+    console.log("update review table, close review form, update review state");
+  };
+
+  const onError = (err) => {
+    throw new Error(err);
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit, onError)}>
       <Box
         className="form-container"
         display="flex"
         flexDirection="column"
         gap={1}
+        alignItems="center"
       >
+        {errors?.ratings && (
+          <Box fontSize={10} color="red" width={200} textAlign="center">
+            {errors.ratings.message}
+          </Box>
+        )}
         <Box
           id="ratings-container"
           display="flex"
           alignItems="center"
           justifyContent="space-between"
+          width={200}
         >
           <Box component="label" htmlFor="rating-one">
             <input
               id="rating-one"
               type="radio"
-              {...register("ratings")}
+              {...register("ratings", {
+                required: "Please leave a rating for your experience!",
+              })}
               value={1}
               css={css`
                 display: none;
@@ -53,7 +73,9 @@ const CourtReviewForm = () => {
             <input
               id="rating-two"
               type="radio"
-              {...register("ratings")}
+              {...register("ratings", {
+                required: "Please leave a rating for your experience!",
+              })}
               value={2}
               css={css`
                 display: none;
@@ -76,7 +98,9 @@ const CourtReviewForm = () => {
             <input
               id="rating-three"
               type="radio"
-              {...register("ratings")}
+              {...register("ratings", {
+                required: "Please leave a rating for your experience!",
+              })}
               value={3}
               css={css`
                 display: none;
@@ -99,7 +123,9 @@ const CourtReviewForm = () => {
             <input
               id="rating-four"
               type="radio"
-              {...register("ratings")}
+              {...register("ratings", {
+                required: "Please leave a rating for your experience!",
+              })}
               value={4}
               css={css`
                 display: none;
@@ -122,7 +148,9 @@ const CourtReviewForm = () => {
             <input
               id="rating-five"
               type="radio"
-              {...register("ratings")}
+              {...register("ratings", {
+                required: "Please leave a rating for your experience!",
+              })}
               value={5}
               css={css`
                 display: none;
@@ -145,6 +173,28 @@ const CourtReviewForm = () => {
         <Box fontSize={16} fontWeight="bold">
           RATE YOUR EXPERIENCE!
         </Box>
+        <Box>
+          <textarea
+            id="description"
+            rows={phoneMediaQuery ? 8 : 5}
+            cols={phoneMediaQuery ? 45 : 100}
+            placeholder={`Leave a review of the court!\n\nE.g. surface type/condition of the court etc!`}
+            {...register("review")}
+            css={css`
+              padding: 5px;
+              resize: none;
+              font-size: 12px;
+              min-width: 75%;
+              ::placeholder {
+                font-size: 12px;
+                font-style: italic;
+              }
+            `}
+          />
+        </Box>
+        <Button size="small" variant="contained" color="success" type="submit">
+          Review!
+        </Button>
       </Box>
     </form>
   );

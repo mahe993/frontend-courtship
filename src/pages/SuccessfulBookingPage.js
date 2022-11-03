@@ -28,6 +28,7 @@ const SuccessfulBookingPage = () => {
       navigate("/bookings");
     } else if (state.bookingId) {
       getBooking();
+      //check if booking status === completed, getReview
     }
   }, []);
 
@@ -155,7 +156,7 @@ const SuccessfulBookingPage = () => {
         "review"
       )}
       {openForm && (
-        <Box mt={1}>
+        <Box mt={0}>
           <CourtReviewForm setOpenForm={setOpenForm} />
         </Box>
       )}
