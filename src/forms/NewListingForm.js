@@ -33,6 +33,7 @@ const NewListingForm = ({ setOpenForm, setSnackBarOpen }) => {
       const accessToken = await getAccessTokenSilently({
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       });
+      console.log(accessToken, user.sub);
       // create new court row
       const res = await axios({
         method: "post",
