@@ -101,8 +101,12 @@ export const getAverageRating = (reviews) => {
   if (reviews.length === 1) {
     return reviews[0].ratings;
   }
-  const sum = reviews.reduce((prev, curr) => {
-    return prev.ratings + curr.ratings;
+  const sum = reviews.reduce((prev, curr, i) => {
+    if (i === 1) {
+      prev = prev.ratings;
+    }
+    const { ratings: currRatings } = curr;
+    return prev + currRatings;
   });
   const average = sum / reviews.length;
   return average.toFixed(2);

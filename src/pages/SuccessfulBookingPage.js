@@ -23,6 +23,14 @@ const SuccessfulBookingPage = () => {
   //get bookingId from router
   const { state } = useLocation();
 
+  //rerender Review when review is posted by form
+  useEffect(() => {
+    //check if booking status === completed, getReview
+    if (state.booking.status === "Completed") {
+      getReview();
+    }
+  }, [openForm]);
+
   //get the booking from bookingId
   useEffect(() => {
     if (state?.booking?.id === undefined) {
@@ -180,11 +188,7 @@ const SuccessfulBookingPage = () => {
         ))}
       {openForm && (
         <Box>
-          <CourtReviewForm
-            setOpenForm={setOpenForm}
-            setReview={setReview}
-            booking={state?.booking}
-          />
+          <CourtReviewForm setOpenForm={setOpenForm} booking={state?.booking} />
         </Box>
       )}
     </Box>

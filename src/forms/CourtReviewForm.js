@@ -8,7 +8,7 @@ import { BACKEND_URL, BREAKPOINT } from "../constants";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const CourtReviewForm = ({ setOpenForm, setReview, booking }) => {
+const CourtReviewForm = ({ setOpenForm, booking }) => {
   const {
     register,
     watch,
@@ -24,7 +24,7 @@ const CourtReviewForm = ({ setOpenForm, setReview, booking }) => {
   const createReview = async () => {
     try {
       const accessToken = await getAccessTokenSilently();
-      const review = await axios({
+      await axios({
         method: "POST",
         url: `${BACKEND_URL}/reviews`,
         headers: {
@@ -39,7 +39,6 @@ const CourtReviewForm = ({ setOpenForm, setReview, booking }) => {
           bookingId: booking.id,
         },
       });
-      setReview(review.data);
     } catch (err) {
       throw new Error(err);
     }
